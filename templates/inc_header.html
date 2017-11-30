@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+ <link rel="stylesheet" href="css/bootstrap.css">
+ <link rel="stylesheet" href="css/jquery-ui.css">
+ <!--<script src="js/additional/jquery-1.12.1.js"></script>
+ <script src="js/additional/jquery-1.12.4.js"></script>-->
+ <script src="js/additional/popper.min.js"></script>
+  <link rel="stylesheet" href="css/navigation.css">
+
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="js/additional/pdfmake.js"></script>
+    <script src="js/additional/vfs_fonts.js"></script>
+
+
+    <style>
+        .table{
+            font-size: small;
+        }
+        .PaledTurquoise {
+            background: rgba(175, 238, 238, 0.33);
+        }
+        .linenBg{
+            background: rgba(203, 132, 250, 0.22);
+        }
+        .cadetBlue2Bg {
+            background: rgba(135, 206, 235, 0.18);
+        }
+        .snow
+        {
+            background: snow;
+        }
+        .lightgoldenrodyellow
+        {
+            background: lightgoldenrodyellow;
+        }
+        .gold
+        {
+            background: rgba(255, 215, 0, 0.24);
+        }
+
+
+    </style>
+
+
+</head>
+<body>
+
+  <div class="container-fluid">
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+      <a class="navbar-brand" href="homepage.php"><img src="images/logo.png" height="90" weight="90">&nbsp;<span style="font-size: 2em"></span></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+
+          <li class="nav-item">
+            <!--<a class="nav-link" href="index.html">Login</a>-->
+            <div class="dropdown">
+              <button class="btn btn-secondary btn-lg btn-block" onclick="homepage()" type="button" id="home" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Home
+              </button>
+            </div>
+          </li>
+          &nbsp;
+          <li class="nav-item">
+            <div class="dropdown">
+              <button class="btn btn-secondary btn-lg btn-block" onclick="User()" type="button" id="register" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Users
+              </button>
+            </div>
+          </li>
+          &nbsp;
+          <div class="dropdown">
+            <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Contributors
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+              <button class="dropdown-item" type="button" id="carLink" onclick="addContributors()">Add Contributor</button>
+              <button class="dropdown-item" type="button" id="viewAllCarsLink" onclick="viewContributors()">View Contributors</button>
+            </div>
+          </div>
+          &nbsp;
+          <li class="nav-item">
+            <div class="dropdown">
+              <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Bookings
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                <button class="dropdown-item" type="button" id="addBooking" onclick="addBooking()">Add a booking</button>
+                <button class="dropdown-item" type="button" id="viewBooking" onclick="viewBookings()">View All Bookings</button>
+              </div>
+            </div>
+            </li>
+            &nbsp;
+            <li class="nav-item">
+             <div class="dropdown">
+             <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Programs Slot
+             </button>
+             <div class="dropdown-menu" aria-labelledby="dropdownMenu4">
+             <button class="dropdown-item" type="button" id="addProgramSlot" onclick="addProgramSlot()">Add Program Slot</button>
+             <button class="dropdown-item" type="button" id="viewProgramSlot" onclick="viewProgramSlot()">View Program Slot</button>
+             </div>
+             </div>
+             </li>
+             &nbsp;
+            <li class="nav-item">
+                <div class="dropdown">
+                    <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Guests
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu5">
+                        <button class="dropdown-item" type="button" id="addGuest" onclick="addGuests()">Add Program Slot</button>
+                        <button class="dropdown-item" type="button" id="viewGuest" onclick="viewGuests()">View Program Slot</button>
+                    </div>
+                </div>
+            </li>
+            &nbsp;
+
+        </ul>
+      </div>
+    </nav>
+  <br />
+    <script>
+      function viewContributors(){
+          location.href="contributor.php";
+      }
+      function addContributors(){
+          location.href="addContributor.php";
+      }
+      function addBooking(){
+          location.href="addBooking.php";
+      }
+      function viewBookings(){
+          location.href="bookingCalender.php";
+      }
+      function homepage()
+      {
+          location.href="homepage.php";
+      }
+      function User()
+      {
+          location.href="users.php";
+      }
+      function addProgramSlot()
+      {
+          location.href="addProgramSlot.php";
+      }
+      function viewProgramSlot()
+      {
+          location.href="programSlot.php";
+      }
+      function addGuests()
+      {
+          location.href="addGuests.php";
+      }
+      function viewGuests()
+      {
+          location.href="guests.php";
+      }
+
+    </script>
