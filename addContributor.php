@@ -20,7 +20,7 @@ include("templates/inc_header.html");
 
             <div class="form-group">
                 <div class="col-sm-7">
-                <button id="AddContributor" name="AddContributor" class="btn btn-outline-success" value="Add Contributor" onclick="addContributor()" return false;>Add Contributor</button>
+                <button id="AddContributor" name="AddContributor" class="btn btn-outline-success" value="Add Contributor">Add Contributor</button>
                 </div>
             </div>
             </form>

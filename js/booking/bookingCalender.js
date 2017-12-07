@@ -2,8 +2,6 @@
  * Created by thabomoopa on 2017/11/17.
  */
 $(document).ready(function(){
-    //function to populate the table with the data of the studio
-    var URLlink = "http://localhost:8080";
 
     $( function() {
         $( "#datepicker" ).datepicker({
@@ -12,53 +10,46 @@ $(document).ready(function(){
                 //sessionStorage.setItem("selectedDate",dates);
                 $.ajax({
                     type: "GET",
-                    dataType: "json",
-                    url: URLlink + "/studioTimes/findAll?",
-                    async: false,
+                    url: "curlScripts/booking/bookingCalender.php?",
+                    data: {
+                        action: 'times'
+                    },
+                    async: true,
                     success: function (response) {
-                        $("#table tbody").empty();
-                        var datesArray = [];
-
-                        $.each(response, function(timeKey, timeValue){
-                            datesArray.push(timeValue.times);
-
+                        console.log(JSON.parse(response));
+                        var timesArrayDay = [];
+                        //var timesCurl = JSON.parse(response);
+                        $.each(JSON.parse(response), function (key, value) {
+                            timesArrayDay.push(value.times);
                         });
-                        for (var i = 0; i < datesArray.length; i++) {
-                            var programColor = '';
-                            var htmlData = '';
-                            var backgroundColorsArray = ["linen", "SkyBlue","PaledTurquoise","snow","lightgoldenrodyellow","gold"];
-                            htmlData += '<tr>';
-                            htmlData += '<td>' + datesArray[i] + '</td>';
 
-                            $.ajax({
-                                type: "GET",
-                                dataType: "json",
-                                url: URLlink + "/booking/findByBookingDateAndTime?",
-                                data: "bookingDate=" + dates + "&bookingTime=" + datesArray[i],
-                                async: false,
-                                success: function (data) {
-                                   // console.log(data.bookingTime);
-                                    if (datesArray[i] == data.bookingTime) {
-                                        htmlData += '<td>' + data.user + '</td>';
+                        $.ajax({
+                            type: "GET",
+                            url: "curlScripts/booking/bookingCalender.php?",
+                            data: {
+                                bookingDate: dates,
+                                //bookingTime: value,
+                                action: 'findByBookingDate'
+                            },
+                            async: true,
+                            success: function (data) {
+                                //console.log(JSON.parse(data.id));
+                                var arrayToholdFromServer = [];
+                                //htmlData += '<td>' + JSON.parse(data) + '</td>';
 
-                                        htmlData += '<td>' + data.contributor.name + '</td>';
-                                        htmlData += '<td>' + data.programSlot.name + '</td>';
-                                        programColor = data.programSlot.name;
-                                        htmlData += '<td>' + data.technical + '</td>';
-                                        htmlData += '<td>' + data.additionalInfo + '</td>';
-                                        htmlData += '<td><a class="btn btn-outline-primary btn-sm" data-value="'+data.id+'" id="print" >Print</a>&nbsp;<a href="bookingCalender.php" class="btn btn-outline-danger btn-sm" data-value="'+data.id+'" id="delete" >Delete</a><br /></td>';
-                                    }
-                                }
-                            });
-                            htmlData += '</tr>';
-                            $("#table tbody").append(htmlData);
-                            var randomNumber = Math.floor(Math.random()*backgroundColorsArray.length);
-                            for(var j=0; j<datesArray.length; j++)
-                            {
-                                //console.log(programColor);
-                                $("tr:contains('"+programColor+"')").addClass(backgroundColorsArray[randomNumber]);
+                                $.each(JSON.parse(data), function(key, values){
+                                    arrayToholdFromServer.push(values);
+                                });
+                                //console.log(arrayToholdFromServer);
+                                // $.each(arrayToholdFromServer,function(keys, ArrayValues)
+                                //{
+
+                                // htmlData += '<td>'+ArrayValues+'</td>';
+                                //});
+                                displayTable(arrayToholdFromServer, timesArrayDay);
+                                console.log(timesArrayDay);
                             }
-                        }
+                        });
                     },
                     error: function(xhr){
                         alert("Error happend");
@@ -66,12 +57,42 @@ $(document).ready(function(){
 
                 });
 
-                $("a#delete").click(function(){
+                function displayTable(arrayDetails,arrayTime)
+                {
+                    var htmlData = '';
+                    htmlData += '<tr>';
+                    $.each(arrayTime, function(key, value)
+                    {
+                        htmlData += '<td>'+value+'</td>';
+
+                        $.each(arrayDetails, function(keys, values)
+                        {
+                            if(value == values.bookingTime)
+                            {
+                                htmlData += '<td>'+values.user+'</td>';
+                                htmlData += '<td>'+values.contributor.name+'</td>';
+                                htmlData += '<td>'+values.programSlot.name+'</td>';
+                                htmlData += '<td>'+values.technical+'</td>';
+                                htmlData += '<td>'+values.additionalInfo+'</td>';
+                                htmlData += '<td><button class="btn btn-outline-primary btn-sm" id="print" value="' + values.id + '">Print</button>&nbsp;<button class="btn btn-outline-danger btn-sm" id="delete" value="' + values.id + '">Delete</button></td>';
+                            }
+                        });
+                        htmlData += '</tr>';
+                    });
+
+                    $("#table tbody").append(htmlData);
+                }
+
+                $(document).on('click', '#delete', function(){
+                    var id = $(this).val();
                     $.ajax({
-                    type: "GET",
-                        dataType: "json",
-                        url: URLlink + "/booking/deleteBooking?",
-                        data: "id="+$(this).data('value'),
+                        type: "GET",
+                        //dataType: "json",
+                        url: "curlScripts/booking/bookingCalender.php?",
+                        data: {
+                            bookingId: id,
+                            action: 'deleteBooking'
+                        },
                         async: true,
                         success: function (data) {
                             location.href="bookingCalender.php";
@@ -79,36 +100,43 @@ $(document).ready(function(){
                     });
                 });
 
-                $("a#print").click(function(){
+                $(document).on('click', '#print', function(){
+                    var id = $(this).val();
                     var organisationName = [];
                     var position = [];
                     $.ajax({
                         type: "GET",
-                        dataType: "json",
-                        url: URLlink + "/booking/readBooking?",
-                        data: "id="+$(this).data('value'),
-                        async: false,
+                        //dataType: "json",
+                        url: "curlScripts/booking/bookingCalender.php?",
+                        data: {
+                            bookingId: id,
+                            action: 'readBooking'
+                        },
+                        async: true,
                         success: function (data) {
-                            console.log(data);
-                            organisationName.push(data.contributor.organisation.organisationName);
-                            organisationName.push(data.contributor.contact);
-                            organisationName.push(data.contributor.additionalContact);
-                            organisationName.push(data.bookingTime);
-                            organisationName.push(data.bookingDate);
-                            organisationName.push(data.programSlot.name);
-                            organisationName.push(data.programSlot.time);
-                            organisationName.push(data.rcsDates);
-                            organisationName.push(data.contributor.surname);
-                            organisationName.push(data.contributor.email);
-                            organisationName.push(data.user);
-                            organisationName.push(data.technical);
-                            organisationName.push(data.additionalInfo);
-                            organisationName.push(data.contributor.name);
-                            position.push(data.contributor.position);
-
+                            var results = data.split("|");
+                            
+                            organisationName.push(results[0]);
+                            organisationName.push(results[1]);
+                            organisationName.push(results[2]);
+                            organisationName.push(results[3]);
+                            organisationName.push(results[4]);
+                            organisationName.push(results[5]);
+                            organisationName.push(results[6]);
+                            organisationName.push(results[7]);
+                            organisationName.push(results[8]);
+                            organisationName.push(results[9]);
+                            organisationName.push(results[10]);
+                            organisationName.push(results[11]);
+                            organisationName.push(results[12]);
+                            organisationName.push(results[13]);
+                            organisationName.push(results[14]);
+                            //organisationName.push(results[15]);
+                            
+                            printProduction(organisationName);
                         }
                     });
-                    $(function(){
+                    function printProduction(print){
                         var docDefinition = {
                             content: [
                                 {
@@ -124,17 +152,17 @@ $(document).ready(function(){
                                                 width: 90},
                                                 {text:'Tel: (021) 917 7000 Fax: (021 914 1351)\n2nd Floor Santyger Building, Willie van Schoor Avenue, Bellville,7535\n\nGPS Co-ordinates\n-33.8739919,18.637452800000005',colSpan:3},{},{}],
                                             [{text: 'Production Sheet',colSpan:4,alignment: 'center'},{},{},{}],
-                                            [{text: 'Date of pre-recording'}, {text: organisationName[4]}, {text: 'Time of pre-recording'}, {text: organisationName[3]}],
-                                            [{text: 'Title of file on RCS '}, {text: organisationName[5], colSpan: 3}, {}, {}],
-                                            [{text: 'Time of slot'}, {text: organisationName[6]}, {text: 'Broadcasting date '}, {text: organisationName[7]}],
-                                            [{text: 'Interviewee /-s'}, {text: organisationName[13]}, {text: 'Surname'}, {text: organisationName[8]}],
-                                            [{text: 'Organisation'}, {text: organisationName[0]},{text: 'Position'}, {text: position[0]}],
-                                            [{text: 'Contact Details'}, {text: organisationName[1]}, {text: 'Alternative Contact'}, {text: organisationName[2]}],
-                                            [{text: 'E-Mail'}, {text: organisationName[9], colSpan: 3}, {}, {}],
-                                            [{text: 'Interviewer'}, {text: organisationName[10], colSpan: 3}, {}, {}],
-                                            [{text: 'Technical'}, {text: organisationName[11], colSpan: 3}, {}, {}],
+                                            [{text: 'Date of pre-recording'}, {text: print[4]}, {text: 'Time of pre-recording'}, {text: print[3]}],
+                                            [{text: 'Title of file on RCS '}, {text: print[5], colSpan: 3}, {}, {}],
+                                            [{text: 'Time of slot'}, {text: print[6]}, {text: 'Broadcasting date '}, {text: print[7]}],
+                                            [{text: 'Interviewee /-s'}, {text: print[13]}, {text: 'Surname'}, {text: print[8]}],
+                                            [{text: 'Organisation'}, {text: print[0]},{text: 'Position'}, {text: print[14]}],
+                                            [{text: 'Contact Details'}, {text: print[1]}, {text: 'Alternative Contact'}, {text: print[2]}],
+                                            [{text: 'E-Mail'}, {text: print[9], colSpan: 3}, {}, {}],
+                                            [{text: 'Interviewer'}, {text: print[10], colSpan: 3}, {}, {}],
+                                            [{text: 'Technical'}, {text: print[11], colSpan: 3}, {}, {}],
                                             [{text: 'Additional Information'}, {
-                                                text: organisationName[12],
+                                                text: print[12],
                                                 colSpan: 3
                                             }, {}, {}],
                                             [{text: 'Progress'}, {
@@ -147,9 +175,8 @@ $(document).ready(function(){
                                 },
                             ],
                         }
-                        console.log(docDefinition);
                         pdfMake.createPdf(docDefinition).download('productionSheet.pdf');
-                    });
+                    }
                 });
             },
             minDate: -0,

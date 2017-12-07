@@ -1,9 +1,32 @@
 /**
  * Created by thabomoopa on 2017/11/16.
  */
-//$(document).ready(function(){
-    var URLlink = "http://localhost:8080";
+$(document).ready(function(){
+
+    //console.log(URLlink);
     function validateEmail(email) {
+            $.ajax({
+                type: "GET",
+                url: "curlScripts/user/userEmailCurl.php",
+                data: {
+                    email:email
+                },
+                success: function (response) {
+                    if(response == "found")
+                    {
+                        return email;
+                    }
+                    else{
+                        $("#errorEmail").text("Email not found, try another email address.").show();
+                        //fade out the error text when the user clicks on the textbox
+                        $("#txtEmail").click(function () {
+                            $("#errorEmail").fadeOut('slow');
+                        });
+                        //prevent the form from being submitted if there is an error
+                        event.preventDefault();
+                    }
+                }
+            });
         if (email === "") {
             $("#errorEmail").text("Please enter a Email address.").show();
             //fade out the error text when the user clicks on the textbox
@@ -23,7 +46,8 @@
             });
         }
         else
-            return email;
+            return email.toLowerCase();
+
         function validEmail(eEmail)
         {
             var filter = /^([0-9a-zA-Z]+[-._+&amp;])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$/;
@@ -34,6 +58,7 @@
         }
     }
     function validatePassword(password) {
+
         if (password === "") {
             $("#errorPassword").text("Please enter a password.").show();
             //fade out the error text when the user clicks on the textbox
@@ -70,60 +95,66 @@
         else
             return password;
     }
-    function validateLogin() {
 
-       var email = validateEmail($("#txtEmail").val());
-       var password = validatePassword($("#txtPassword").val());
-        var data = "email=" + email + "&password="+password;
-        //var hash = CryptoJS.MD5(password);
-       // alert(hash);
+    $("#login").click(function(){
+        var email = validateEmail($("#txtEmail").val());
+        var password = validatePassword($("#txtPassword").val());
         if (email == false || password == false) {
-            event.preventDefault();
-            //return;
+            $('#errorPage').html('<div class="alert alert-danger" role="alert">Login details are incorrect. Please try again!</div>');
+            $("#txtEmail").click(function () {
+                $("#errorPage").fadeOut('slow');
+            });
+            $("#txtPassword").click(function(){
+                $("#errorPage").fadeOut('slow');
+            });
         }
-       else {
-            var correctEmail = '';
-            var correctPassword = '';
+        else {
             $.ajax({
                 type: "GET",
-                dataType: "json",
-                url: URLlink + "/user/login?",
-                data: data,
-                async: false,
+                url: "curlScripts/user/userlogin.php",
+                data: {
+                    email:email,
+                    password:password
+                },
                 success: function (response) {
-                        event.preventDefault();
-                        console.log(response.email);
-                        if(email.toLowerCase() == response.email)
+                    event.preventDefault();
+                    var results = response.split("|");
+                    console.log(results[0]);
+                    if(results[0] == "email correct")
+                    {
+                        if(results[1] == "password correct")
                         {
-                            if(password == response.password)
-                            {
-                                sessionStorage.setItem("id",response.id);
-                                sessionStorage.setItem("username",response.name);
-                                homepage();
-                                event.preventDefault();
-                            }
-                            else
-                            {
-                                $('#errorPage').html('<div class="alert alert-danger" role="alert">Password is incorrect. Please try again!</div>');
-                                event.preventDefault();
-                            }
+                            //sessionStorage.setItem("id",results[2]);
+                            sessionStorage.setItem("username",results[2]);
+                            homepage();
+                            event.preventDefault();
                         }
                         else
                         {
-                            $('#errorPage').html('<div class="alert alert-danger" role="alert">Email is incorrect. Please try again!</div>');
+                            $('#errorPage').html('<div class="alert alert-danger" role="alert">Password is incorrect. Please try again!</div>');
                             event.preventDefault();
                         }
+                    }
+                    else
+                    {
+                        $('#errorPage').html('<div class="alert alert-danger" role="alert">Email is incorrect. Please try again!</div>');
+                        event.preventDefault();
+                    }
                 },
                 error:function(xhr, ajaxOptions, thrownError){
-                    alert(xhr.responseText)
+                    console.log(xhr.responseText)
                 }
             });
-       }
-    }
+        }
+    });
+    //function validateLogin() {
+
+
+    //}
 
     function homepage()
     {
         location.href="homepage.php";
     }
 
-//});
+});

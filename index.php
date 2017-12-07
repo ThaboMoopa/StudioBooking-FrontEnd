@@ -7,7 +7,7 @@
  */
 include('templates/inc_login.html');
 ?>
-
+<div id="result"></div>
 
 <div id="container" class="container-fluid">
     <span id="errorPage"></span>
@@ -35,14 +35,10 @@ include('templates/inc_login.html');
                         <small id="errorPassword" class="text-danger"></small>
                     </div>
                 </div>
-                <!-- End of Password text field  -->
-
-
                 <!--Button to submit the form -->
                 <div class="form-group row">
-                    <button name="submitAddCar" class="btn btn-outline-success" value="Login" onclick="validateLogin()">Login</button>
+                    <button name="submitAddCar" id="login" class="btn btn-outline-success" value="Login">Login</button>
                 </div>
-
         </li>
     </ul>
     <br />

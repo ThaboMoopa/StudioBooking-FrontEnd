@@ -6,8 +6,6 @@
  */
 $(document).ready(function()
 {
-    console.log(sessionStorage.getItem("organisationId"));
-    console.log(sessionStorage.getItem("organisationId"));
     var programName = '';
     var programTime = '';
     var URLlink = "http://localhost:8080";

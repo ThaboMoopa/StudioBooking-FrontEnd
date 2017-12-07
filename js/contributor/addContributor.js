@@ -3,33 +3,42 @@
  */
 $(document).ready(function(){
 
-    $("#txtOrganisation").on('focus',function(event){
+    $("#txtOrganisation").on('keydown focus',function(event){
 
-        var URLlink = "http://localhost:8080";
-        var availableTags = [];
         $.ajax({
             type: "GET",
-            dataType: "json",
-            url: URLlink + "/organisation/findAll?",
-            async: false,
+            //dataType: "json",
+            url: "curlScripts/contributor/contributor.php",
+            data: {
+                action: 'findAll'
+            },
+            async: true,
             success: function (response) {
-                $.each(response, function(key, value)
+                var availableTags = [];
+                var results = response.split("|");
+                //console.log(results);
+                $.each(results, function(key, value)
                 {
-                    availableTags.push(value.organisationName);
+                    availableTags.push(value);
                 });
+                populateOrganisation(availableTags);
 
             },
             error: function(xhr){
                 alert("Connection to server unavailable, check your connection to server");
             }
+
         });
-        $( "#txtOrganisation" ).autocomplete({
-            source: availableTags
-        });
+        function populateOrganisation(availableTags)
+        {
+            $("#txtOrganisation").autocomplete({
+                source: availableTags
+            });
+        }
+
     });
 
-});
-var URLlink = "http://localhost:8080";
+
 function validateName(name) {
     if (name === "") {
         $("#errorName").text("Please enter a name.").show();
@@ -92,34 +101,35 @@ function validateSurname(surname) {
 function validateEmail(email) {
 
     var matchingEmails = "";
+    //
 
     $.ajax({
         type: "GET",
-        dataType: "text",
-        url: URLlink + "/contributor/findByEmail?",
-        data: "email=" + email,
+        //dataType: "text",
+        url: "curlScripts/contributor/contributor.php",
+        data: {
+            email: email,
+            action: 'findByEmail'
+        },
         async: false,
         success: function(response)
         {
-            //alert(response);
-            // console.log(response);
-            matchingEmails = response;
-
+            var results = response.split("|");
+            matchingEmails = results[0];
         }
 
     });
 
-    // alert(matchingEmails);
-    if(matchingEmails == "Exists")
-    {
-        $("#errorEmail").html("The email address already exists, please try again");
-        $("#txtEmail").on('focus',function(event){
-            $("#errorEmail").fadeOut('slow');
-        });
-        event.preventDefault();
-        return 0;
-    }
-    else if (email === "") {
+        if(matchingEmails == "Exists")
+        {
+            $("#errorEmail").html("The email address already exists, please try again");
+            $("#txtEmail").on('focus',function(event){
+                $("#errorEmail").fadeOut('slow');
+            });
+            event.preventDefault();
+            return false;
+        }
+        else if (email === "") {
         $("#errorEmail").text("Please enter a email address.").show();
 
         //fade out the error text when the user clicks on the textbox
@@ -150,7 +160,7 @@ function validateEmail(email) {
         else
             return false;
     }
-
+    //return false;
 }
 function validateContact(contact) {
     if (contact === "") {
@@ -240,36 +250,44 @@ function validateAdditional(additional) {
 
 function validateOrganisation(organisation) {
 
-    var responseValue = '';
-        var search = "name="+organisation;
+    //var responseValue = '';
+        //var search = "name="+organisation;
         $.ajax({
             type: "GET",
-            dataType: "json",
-            url: URLlink + "/organisation/findByName?",
-            data: search,
-            async: false,
+            //dataType: "json",
+            url: "curlScripts/organisation/organisation.php?",
+            data: {
+                search: organisation,
+                action: 'findByName'
+            },
+            async: true,
             success: function (response) {
-                console.log(responseValue = response.organisationName);
+                var results = response.split("|");
+                validateName(organisation, results[0])
             }
 
         });
 
-    if(responseValue != organisation)
+    function validateName(organisation, replyFromServer)
     {
-        $("#errorOrganisation").text("Organisation does not exist, please register the organisation").show();
-        //++errorInput;
+        if(organisation != replyFromServer)
+        {
+            $("#errorOrganisation").text("Organisation does not exist, please register the organisation").show();
+            //++errorInput;
 
-        //fade out the error text when the user clicks on the textbox
-        $("#txtOrganisation").on('focus',function(event) {
-            $("#errorOrganisation").fadeOut('slow');
-        });
-        return false;
+            //fade out the error text when the user clicks on the textbox
+            $("#txtOrganisation").on('focus',function(event) {
+                $("#errorOrganisation").fadeOut('slow');
+            });
+            return false;
 
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+        }
+
     }
 
-    else if (organisation === "") {
+    if (organisation === "") {
         $("#errorOrganisation").text("Please enter an organisation name.").show();
 
         //fade out the error text when the user clicks on the textbox
@@ -332,7 +350,7 @@ function validatePosition(position) {
         return position[0].toUpperCase() + position.slice(1);
 }
 
-function addContributor() {
+    $("#AddContributor").click(function(event){
 
     var name = validateName($.trim($("#txtName").val()));
     var surname = validateSurname($.trim($("#txtSurname").val()));
@@ -348,34 +366,43 @@ function addContributor() {
         event.preventDefault();
     }
     else {
-            var contributorData =  "name=" + name+ "&surname=" + surname+ "&email=" + email+
-                "&position=" + position + "&contact=" + contact + "&additionalContact=" + additionalContact;
-            var search = "name=" + organisation;
-            var organisationId = 0;
+
         $.ajax({
             type: "GET",
-            dataType: "json",
-            url: URLlink + "/organisation/findByName?",
-            data: search,
-            async: false,
+            //dataType: "json",
+            url: "curlScripts/organisation/organisation.php?",
+            data: {
+                search: organisation,
+                action: 'findByName'
+            },
+            async: true,
             success: function (response) {
-                organisationId = response.id;
-
-            $.ajax({
-                type: "POST",
-                dataType: "json",
-                url: URLlink + "/contributor/"+organisationId+"/addContributor?",
-                data: contributorData,
-                async: false,
-                success: function (response) {
-                    location.href="contributor.php";
-                },
-                error: function(xhr){
-                    alert("Adding Customer Failed");
-                }
-            });
+                var results = response.split("|");
+                $.ajax({
+                    type: "GET",
+                    //dataType: "json",
+                    url: "curlScripts/contributor/contributor.php?",
+                    data: {
+                        name: name,
+                        surname: surname,
+                        email: email,
+                        position: position,
+                       contact: contact,
+                       additionalContact: additionalContact,
+                       organisation: results[1],
+                        action: 'addContributor'
+                    },
+                    async: true,
+                    success: function (response) {
+                        location.href="contributor.php";
+                    },
+                    error: function(xhr){
+                        alert("Adding Contributor Failed");
+                    }
+                });
             }
         });
     }
     event.preventDefault();
-}
+});
+});

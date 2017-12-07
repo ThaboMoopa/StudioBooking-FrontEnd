@@ -6,9 +6,11 @@ $(document).ready(function(){
 
     $.ajax({
         type: "GET",
-        dataType: "json",
+        //dataType: "json",
         url: URLlink + "/contributor/readContributor?",
-        data: "id=" + sessionStorage.getItem("contributorId"),
+        data: {
+            id: sessionStorage.getItem("contributorId")
+        },
         success: function (response) {
             $("#txtName").val(response.name);
             $("#txtSurname").val(response.surname);

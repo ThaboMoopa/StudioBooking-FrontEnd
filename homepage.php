@@ -10,6 +10,7 @@ include("templates/inc_header.html");
 <script src="js/index/homepage.js"></script>
     <script src="js/index/clearSessions.js"></script>
 <div id="username"></div>
+<div id="logout"></div>
 
         <ul class="list-group">
 

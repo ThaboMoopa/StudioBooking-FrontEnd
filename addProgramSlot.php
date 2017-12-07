@@ -18,7 +18,7 @@ include("templates/inc_header.html");
                 <div class="form-group">
 
                     <!--suppress XmlInvalidId -->
-                    <label for="program" class="col-sm-2 col-form-label" >Name of Program Slot</label>
+                    <label for="program" class="col-sm-7 col-form-label" >Name of Program Slot</label>
                     <div class="col-sm-4">
                         <input type="text" id="programSlot" class="form-control">
                         <small id="errorProgramSlot" class="text-danger"></small>
@@ -27,7 +27,7 @@ include("templates/inc_header.html");
                     <br />
                 </div>
                     <div class="form-group">
-                        <label for="programSlot" class="col-sm-1 col-form-label">Time of slot</label>
+                        <label for="programSlot" class="col-sm-7 col-form-label">Time of slot</label>
                         <div class="col-sm-4">
                             <input type="text" id="txtTime" class="form-control">
                             <small id="timeStandalone" class="form-text text-muted">Time format is 00h00 (For Example: 09h30)</small>
@@ -37,10 +37,13 @@ include("templates/inc_header.html");
                     <br />
                     <div class="form-group">
                         <div class="col-sm-7">
-                            <button id="AddProgram" name="AddProgram" class="btn btn-outline-success" onclick="addProgram()" return false;>Add Program slot</button>
+                            <button id="AddProgram" name="AddProgram" class="btn btn-outline-success">Add Program slot</button>
                         </div>
                     </div>
             </form>
         </li>
     </ul>
+<br>
+<br>
+<br>
 <?php  include("templates/inc_footer.html"); ?>

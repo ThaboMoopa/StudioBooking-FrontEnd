@@ -3,35 +3,6 @@
  */
 var ajaxResponse = "";
 $(document).ready(function(){
-    var URLlink = "http://localhost:8080";
-    $("#programSlot").on('keydown',function(event){
-        var search = $.trim($("#programSlot").val());
-        search = search.replace(/ /g, "_").toLowerCase();
-        //search = search[0].toUpperCase() + name.substr(1).toLowerCase();
-       // $("#errorProgramSlot").text(search);
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: URLlink + "/programSlot/findByName?",
-            data: "search="+search,
-            async: false,
-            success: function (response) {
-                console.log(response);
-                ajaxResponse = response;
-                if("Exists" == response)
-                {
-                    $("#errorProgramSlot").text("Program already exists. Try another program");
-                    //fade out the error text when the user clicks on the textbox
-                    $("#programSlot").on('keydown',function(event) {
-                        $("#errorProgramSlot").fadeOut('slow');
-                        event.preventDefault();
-                    });
-
-                }
-
-            }
-        });
-    });
 
     $("#txtTime").on('keydown', function(event){
         var time = $("#txtTime").val();
@@ -40,9 +11,36 @@ $(document).ready(function(){
         console.log(finaltime);
     });
 
-});
+
 
 function validateName(name) {
+    var search = '';
+    search = name.replace(/ /g, "_").toLowerCase();
+
+    $.ajax({
+        type: "GET",
+        //dataType: "json",
+        url: 'curlScripts/programSlot/programSlot.php?',
+        data: {
+            search: search,
+            action: 'findByIndividualName'
+        },
+        async: true,
+        success: function (response) {
+            var results = JSON.parse(response);
+             if(search == results.name)
+            {
+            $("#errorProgramSlot").text("Program already exists. Try another program");
+            //fade out the error text when the user clicks on the textbox
+            $("#programSlot").on('focus',function(event) {
+                $("#errorProgramSlot").fadeOut('slow');
+                //event.preventDefault();
+            });
+
+            }
+
+        }
+    });
             if (name === "") {
                 $("#errorProgramSlot").text("Please enter a program name.").show();
 
@@ -84,7 +82,38 @@ function validateName(name) {
 
 function validateTime(time)
 {
+    var name = validateName($.trim($("#programSlot").val()));
+    $.ajax({
+        type: "GET",
+        //dataType: "json",
+        url: 'curlScripts/programSlot/programSlot.php?',
+        data: {
+            search: name,
+            action: 'findByIndividualName'
+        },
+        async: true,
+        success: function (data) {
+            //var results = JSON.parse(response);
+            console.log(JSON.parse(data));
+            //console.log(times == results.time);
+            //ajaxResponse = response;
+            // if(times == results.time)
+            // {
+            //     $("#errorTime").text("The time is not available, try another time slot");
+            //     //fade out the error text when the user clicks on the textbox
+            //     $("#txtTime").on('keydown',function(event) {
+            //         $("#errorTime").fadeOut('slow');
+            //         //event.preventDefault();
+            //     });
+            //
+            // }
+
+        }
+    });
+
     var finalTime = /^([01]\d|2[0-3])h?([0-5]\d)$/.test(time);
+
+
     if(time == "")
     {
 
@@ -158,24 +187,33 @@ function validateTime(time)
     }
 
 
-function addProgram(){
-
-    var name = validateName($.trim($("#programSlot").val().replace(/ /g, "_").toLowerCase()));
+$("#AddProgram").click(function()
+{
+    console.log("im in");
+    var name = validateName($.trim($("#programSlot").val()));//.replace(/ /g, "_").toLowerCase()));
     var times = validateTime($.trim($("#txtTime").val()));
 
-    if(name == false || times == false){
-        $("#errorForm").html('<div class="alert alert-danger" role="alert">Your details are incorrect, try again!.</div>').show();
-        //++errorInput;
 
-        //fade out the error text when the user clicks on the textbox
-        $("#txtTime").on('focus',function(event) {
-            $("#errorForm").fadeOut('slow');
-        });
-        $("#errorForm").html('<div class="alert alert-danger" role="alert">Your details are incorrect, try again!.</div>').show();
 
-        //fade out the error text when the user clicks on the textbox
-        $("#programSlot").on('focus',function(event) {
-            $("#errorForm").fadeOut('slow');
-        });
-    }
-}
+
+    // if(name == false || times == false){
+    //     $("#errorForm").html('<div class="alert alert-danger" role="alert">Your details are incorrect, try again!.</div>').show();
+    //     //++errorInput;
+    //
+    //     //fade out the error text when the user clicks on the textbox
+    //     $("#txtTime").on('focus',function(event) {
+    //         $("#errorForm").fadeOut('slow');
+    //     });
+    //     $("#errorForm").html('<div class="alert alert-danger" role="alert">Your details are incorrect, try again!.</div>').show();
+    //
+    //     //fade out the error text when the user clicks on the textbox
+    //     $("#programSlot").on('focus',function(event) {
+    //         $("#errorForm").fadeOut('slow');
+    //     });
+    // }
+    event.preventDefault();
+
+});
+
+
+});

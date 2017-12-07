@@ -15,6 +15,7 @@
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="js/additional/pdfmake.js"></script>
     <script src="js/additional/vfs_fonts.js"></script>
+    <script src="js/index/access.js"></script>
 
 
     <style>
@@ -69,7 +70,7 @@
             </div>
           </li>
           &nbsp;
-          <li class="nav-item">
+          <li id="users" class="nav-item">
             <div class="dropdown">
               <button class="btn btn-secondary btn-lg btn-block" onclick="User()" type="button" id="register" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Users
@@ -123,6 +124,18 @@
                 </div>
             </li>
             &nbsp;
+            <li class="nav-item">
+                <div class="dropdown">
+                    <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Organisations
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu6">
+                        <button class="dropdown-item" type="button" id="addOrganisation" onclick="addOrganisation()">Add Organisation</button>
+                        <button class="dropdown-item" type="button" id="viewOrganisation" onclick="viewOrganisation()">View Organisation</button>
+                    </div>
+                </div>
+            </li>
+            &nbsp;
 
         </ul>
       </div>
@@ -165,5 +178,14 @@
       {
           location.href="guests.php";
       }
+      function addOrganisation()
+      {
+          location.href="addOrganisation.php";
+      }
+      function viewOrganisation()
+      {
+          location.href="Organisation.php";
+      }
+
 
     </script>
