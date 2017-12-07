@@ -5,12 +5,15 @@ $(document).ready(function(){
 var URLlink = "http://localhost:8080";
     $.ajax({
         type: "GET",
-        dataType: "json",
-        url: URLlink + "/programSlot/findAll?",
-        //data: "search="+search,
-        async: false,
+        //dataType: "json",
+        url: 'curlScripts/programSlot/programSlot.php?',
+        data: {
+            action: 'findAll'
+        },
+        async: true,
         success: function (response) {
-            $.each(response, function(key, value){
+
+            $.each(JSON.parse(response), function(key, value){
                 var htmlData = '';
                 htmlData += '<tr>';
                 htmlData += '<td>' + value.name + '</td>';
