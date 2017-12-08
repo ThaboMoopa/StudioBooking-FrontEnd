@@ -22,7 +22,7 @@ include("templates/inc_header.html");
                 <table class="table" id="table">
                     <thead>
                     <tr>
-                        <th>Name</th><th>Email</th><th>Password</th>
+                        <th>Name</th><th>Email</th><th>Password</th><th>Action</th>
                     </tr>
                     <thead>
                     <tbody>
@@ -31,9 +31,7 @@ include("templates/inc_header.html");
                 </table>
             </div>
         </li>
-
     </ul>
-
     <br />
     <br />
     <br />

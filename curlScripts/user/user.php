@@ -7,7 +7,7 @@
  */
 if(isset($_GET['action'])) {
     $name = $_GET['name'];
-    $password = $_GET['pasword'];
+    $password = md5($_GET['password']);
     $email = $_GET['email'];
 //    $name = $_GET['name'];
 //    $bookingLength = $_GET['bookingLength'];
@@ -19,8 +19,8 @@ if(isset($_GET['action'])) {
 //    $user = $_GET['user'];
 
 
-    if($_GET['action'] == 'times') {
-        times();
+    if($_GET['action'] == 'findAll') {
+        findAll();
     }
 //    elseif($_GET['action'] == 'findByBookingDate') {
 //        findByBookingDate($bookingDate);
@@ -46,8 +46,36 @@ function addUser($name, $password, $email)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_PORT => "1080",
+        //CURLOPT_PORT => "1080",
         CURLOPT_URL => "http://localhost:8091/user/addUser?email=$email&password=$password&name=$name",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+            "authorization: Basic dXNlcjpwYXNzd29yZA==",
+            "cache-control: no-cache"
+        ),
+    ));
+//,"postman-token: 6b0d34a9-8fb9-13c4-28fe-e81d41bef709"
+    echo $response = curl_exec($curl);
+    $err = curl_error($curl);
+    curl_close($curl);
+    $results = json_decode($response);
+//    for($i =0; $i<18; $i++)
+//    {
+//        echo "".htmlentities($results[$i]->times)."|";
+//
+//    }
+}
+function findAll()
+{
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        //CURLOPT_PORT => "1080",
+        CURLOPT_URL => "http://localhost:8091/user/findAll?",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,

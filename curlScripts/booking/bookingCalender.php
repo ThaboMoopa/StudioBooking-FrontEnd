@@ -48,7 +48,7 @@ function addBooking($user, $bookingTime,$bookingLength,$bookingTechnical,$bookin
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_PORT => "1080",
+        //CURLOPT_PORT => "1080",
         CURLOPT_URL => "http://localhost:8091/booking/$programId/$contributorId/addBooking?user=$user&bookingDate=$bookingDate&bookingTime=$bookingTime&technical=$bookingTechnical&additionalInfo=$additionalInfo&rcsDates=$rcsDates",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
@@ -76,7 +76,7 @@ function findByName($name)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_PORT => "1080",
+        //CURLOPT_PORT => "1080",
         CURLOPT_URL => "http://localhost:8091/contributor/Search?search=$name",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",

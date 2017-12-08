@@ -8,7 +8,7 @@
 include("templates/inc_header.html");
 ?>
     <script src="js/index/homepage.js"></script>
-    <script src="js/user/user.js"></script>
+    <script src="js/user/addUser.js"></script>
     <div id="username"></div>
 
     <ul class="list-group">

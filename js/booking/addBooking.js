@@ -78,7 +78,6 @@ $(document).ready(function(){
                     });
                     $("a#selectProgram").click(function(){
                         var programId = $(this).data('value');
-                        alert("im in");
                         sessionStorage.setItem("programSelected", programId);
 
                     });
@@ -160,19 +159,9 @@ $(document).ready(function(){
                                     });
 
                                     displayTable(arrayToholdFromServer, datesArray);
-                                    // // if (datesArray[i] == data.bookingTime) {
-                                    // //     htmlData += '<td>' + data.user + '</td>';
-                                    // //     htmlData += '<td>' + data.contributor.name + '</td>';
-                                    // //     htmlData += '<td>' + data.programSlot.name + '</td>';
-                                    // //     htmlData += '<td>' + data.technical + '</td>';
-                                    // //     htmlData += '<td>' + data.additionalInfo + '</td>';
-                                    //     data.user == sessionStorage.getItem("username"));
-                                    // // }
+
                                 }
                             });
-                            //htmlData += '</tr>';
-                            //$("#table tbody").append(htmlData);
-                        //}
                     },
                     error: function(xhr){
                         alert("Error happend");
@@ -227,16 +216,19 @@ $(document).ready(function(){
             },
             async: true,
             success: function (response) {
-                var results = JSON.parse(response);
-                if(results.bookingTime == bookingTimeSelected)
-                {
-                    $("#errorTimes").text("Booking time already taken.").show();
+                //var results = JSON.parse(response);
+                $.each(JSON.parse(response),function (key,value){
+                    if(value == bookingTimeSelected)
+                    {
+                        $("#errorTimes").text("Booking time already taken.").show();
 
-                    //fade out the error text when the user clicks on the textbox
-                    $("#times").on('click',function(event) {
-                        $("#errorTimes").fadeOut('slow');
-                    });
-                }
+                        //fade out the error text when the user clicks on the textbox
+                        $("#times").on('click',function(event) {
+                            $("#errorTimes").fadeOut('slow');
+                        });
+                    }
+                });
+
             }
         });
 
@@ -281,6 +273,7 @@ $(document).ready(function(){
 
                     $.each(JSON.parse(response), function (timeKey, timeValue) {
                         timesArray.push(timeValue.times);
+
                     });
 
                     var nextBookingTime = '';
@@ -288,13 +281,11 @@ $(document).ready(function(){
                     for(var i=0; i<bookingLength; i++) {
 
                         nextBookingTime = timesArray[($.inArray(bookingTime, timesArray) + 1) % timesArray.length];
-                        //console.log(nextBookingTime);
-                        //console.log(nextBookingTime == "16h30");
-                        if(nextBookingTime == "16h30")
+                        if(nextBookingTime == '16h30')
                         {
                             $("#errorLength").text("You're booking length is greater than the available time. Try another length!").show();
                             //fade out the error text when the user clicks on the textbox
-                            $("#txtLength").on('focus',function(event) {
+                            $("#txtLength").on('focus click',function(event) {
                                 $("#errorLength").fadeOut('slow');
                             });
                             break;
@@ -512,7 +503,7 @@ function validateContinue() {
                             timesArray.push(timeValue.times);
                         });
 
-                        var nextBookingTime = '';
+                        //var nextBookingTime = '';
 
                         for(var i=0; i<bookingLength; i++)
                         {
@@ -536,16 +527,17 @@ function validateContinue() {
                                 },
                                 async: true,
                                 success: function (response) {
-                                    //productionSheetPrint();
+
+                                    productionSheetPrint();
                                     console.log(JSON.parse(response));
 
                                 }
                             });
-                            if(bookingTime = timesArray[17])
+                            if(bookingTime == '16h30')
                             {
                                 $("#errorLength").text("You're booking length is greater than the available time. Try another length!").show();
                                 //fade out the error text when the user clicks on the textbox
-                                $("#txtLength").on('focus',function(event) {
+                                $("#txtLength").on('focus click',function(event) {
                                     $("#errorLength").fadeOut('slow');
                                 });
                                 event.preventDefault();
