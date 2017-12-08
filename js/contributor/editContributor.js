@@ -430,7 +430,6 @@ $('#txtEmail').prop('readonly',true);
                         },
                         async: true,
                         success: function (response) {
-                            console.log(JSON.parse(response));
                             location.href="contributor.php";
                         },
                         error: function(xhr){

@@ -70,13 +70,16 @@
             </div>
           </li>
           &nbsp;
-          <li id="users" class="nav-item">
             <div class="dropdown">
-              <button class="btn btn-secondary btn-lg btn-block" onclick="User()" type="button" id="register" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Users
-              </button>
+                <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Users
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu7">
+                    <button class="dropdown-item" type="button" id="addUser" onclick="addUsers()">Add a User</button>
+                    <button class="dropdown-item" type="button" id="viewUser" onclick="viewUsers()">View All Users</button>
+                </div>
             </div>
-          </li>
+            &nbsp;
           &nbsp;
           <div class="dropdown">
             <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -94,7 +97,7 @@
                 Bookings
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                <button class="dropdown-item" type="button" id="addBooking" onclick="addBooking()">Add a booking</button>
+                <button class="dropdown-item" type="button" id="addBooking" onclick="addBooking()">Add a Booking</button>
                 <button class="dropdown-item" type="button" id="viewBooking" onclick="viewBookings()">View All Bookings</button>
               </div>
             </div>
@@ -158,9 +161,13 @@
       {
           location.href="homepage.php";
       }
-      function User()
+      function addUsers()
       {
-          location.href="users.php";
+          location.href = "addUser.php";
+      }
+      function viewUsers()
+      {
+          location.href="user.php";
       }
       function addProgramSlot()
       {
