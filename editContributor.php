@@ -21,7 +21,7 @@ include("templates/inc_header.html");
 
             <div class="form-group">
                 <div class="col-sm-7">
-                    <button id="EditContributor" name="AddContributor" class="btn btn-outline-success" value="Edit Contributor" onclick="editContributor()" return false;>Edit Contributor</button>
+                    <button id="EditContributor" name="AddContributor" class="btn btn-outline-success" value="Edit Contributor">Edit Contributor</button>
                 </div>
             </div>
             </form>

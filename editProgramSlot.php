@@ -20,7 +20,7 @@ include("templates/inc_header.html");
 
             <div class="form-group">
                 <div class="col-sm-7">
-                    <button id="AddProgramSlot" name="AddProgramSlot" class="btn btn-outline-success" value="AddProgramSlot" onclick="addProgramsSlot()" return false;>Edit Program Slot</button>
+                    <button id="AddProgramSlot" name="AddProgramSlot" class="btn btn-outline-success" value="AddProgramSlot">Edit Program Slot</button>
                 </div>
             </div>
             </form>

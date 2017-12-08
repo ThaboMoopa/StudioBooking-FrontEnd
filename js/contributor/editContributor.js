@@ -1,370 +1,445 @@
 /**
  * Created by thabomoopa on 2017/11/17.
  */
-
 $(document).ready(function(){
-
+console.log(sessionStorage.getItem('contributorId'));
+$('#txtEmail').prop('readonly',true);
     $.ajax({
         type: "GET",
         //dataType: "json",
-        url: URLlink + "/contributor/readContributor?",
+        url: "curlScripts/contributor/contributor.php",
         data: {
-            id: sessionStorage.getItem("contributorId")
+            id: sessionStorage.getItem('contributorId'),
+            action: 'readCont'
         },
+        async: true,
         success: function (response) {
-            $("#txtName").val(response.name);
-            $("#txtSurname").val(response.surname);
+            console.log(JSON.parse(response));
+            //$('#txtName').
+            document.getElementById('txtName').value = JSON.parse(response).name;
+            document.getElementById('txtSurname').value = JSON.parse(response).surname;
+            document.getElementById('txtEmail').value = JSON.parse(response).email;
+            document.getElementById('txtOrganisation').value = JSON.parse(response).organisation.organisationName;
+            document.getElementById('txtPosition').value = JSON.parse(response).position;
+            document.getElementById('txtContact').value = JSON.parse(response).contact;
+            document.getElementById('txtAdditionalContact').value = JSON.parse(response).additionalContact;
 
-            $.ajax({
-                type: "GET",
-                dataType: "text",
-                url: URLlink + "/organisation/findByOrganisationId?",
-                data: "id=" + response.organisation.id,
-                success: function (response) {
-                    $("#txtOrganisation").val(response);
-                }
-            });
-            $("#txtEmail").val(response.email);
-            $("#txtContact").val(response.contact);
-            $("#txtAdditionalContact").val(response.additionalContact);
-            $("#txtPosition").val(response.position);
+
+
+
         },
         error: function(xhr){
-            alert("Adding Customer Failed");
+            alert("Connection to server unavailable, check your connection to server");
         }
+
     });
 
-    $("#txtOrganisation").on('focus',function(event){
 
-        var URLlink = "http://localhost:8080";
-        var availableTags = [];
+
+
+    $("#txtOrganisation").on('keydown focus',function(event){
         $.ajax({
             type: "GET",
-            dataType: "json",
-            url: URLlink + "/organisation/findAll?",
-            async: false,
+            //dataType: "json",
+            url: "curlScripts/contributor/contributor.php",
+            data: {
+                action: 'findAll'
+            },
+            async: true,
             success: function (response) {
-                $.each(response, function(key, value)
+                var availableTags = [];
+                var results = response.split("|");
+                //console.log(results);
+                $.each(results, function(key, value)
                 {
-                    availableTags.push(value.organisationName);
+                    availableTags.push(value);
                 });
+                populateOrganisation(availableTags);
 
             },
             error: function(xhr){
                 alert("Connection to server unavailable, check your connection to server");
             }
+
         });
-        $( "#txtOrganisation" ).autocomplete({
-            source: availableTags
-        });
-    });
-
-});
-
-var URLlink = "http://localhost:8080";
-function validateName(name) {
-    if (name === "") {
-        $("#errorName").text("Please enter a name.").show();
-
-        //fade out the error text when the user clicks on the textbox
-        $("#txtName").on('focus',function(event) {
-            $("#errorName").fadeOut('slow');
-        });
-
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
-        return false;
-    }
-    else if (/[^a-zA-Z]/.test(name)) {
-        $("#errorName").text("Only alphabetic characters allowed in the field.").show();
-        //++errorInput;
-
-        //fade out the error text when the user clicks on the textbox
-        $("#txtName").on('focus',function(event) {
-            $("#errorName").fadeOut('slow');
-        });
-        return false;
-
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
-    }
-    else
-        return name[0].toUpperCase() + name.substr(1).toLowerCase();
-}
-
-function validateSurname(surname) {
-    if (surname === "") {
-        $("#errorSurname").text("Please enter a Surname.").show();
-
-        //fade out the error text when the user clicks on the textbox
-        $("#txtSurname").on('focus',function(event) {
-            $("#errorSurname").fadeOut('slow');
-        });
-
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
-        return false;
-    }
-    else if (/[^a-zA-Z-, ]/.test(surname)) {
-        $("#errorSurname").text("Only alphabetic characters allowed in the field.").show();
-        //++errorInput;
-
-        //fade out the error text when the user clicks on the textbox
-        $("#txtSurname").on('focus',function(event) {
-            $("#errorSurname").fadeOut('slow');
-        });
-        return false;
-
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
-    }
-    else
-        return surname[0].toUpperCase() + surname.substr(1).toLowerCase();
-}
-function validateEmail(email) {
-
-    // var matchingEmails = "";
-    //
-    // // alert(matchingEmails);
-    // if(matchingEmails == "Exists")
-    // {
-    //     $("#errorEmail").html("The email address already exists, please try again");
-    //     $("#txtEmail").on('focus',function(event){
-    //         $("#errorEmail").fadeOut('slow');
-    //     });
-    //     event.preventDefault();
-    //     return 0;
-    // }
-    // else
-    if (email === "") {
-        $("#errorEmail").text("Please enter a email address.").show();
-
-        //fade out the error text when the user clicks on the textbox
-        $("#txtEmail").on('focus',function(event) {
-            $("#errorEmail").fadeOut('slow');
-        });
-
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
-        return false;
-    }
-    else if(validEmail(email) === false) {
-        $("#errorEmail").text("Email is invalid! Please try again.").show();
-        //++errorInput;
-        //fade out the error text when the user clicks on the textbox
-        $("#txtEmail").on('focus',function(event) {
-            $("#errorEmail").fadeOut('slow');
-        });
-    }
-    else
-        return email;
-
-    function validEmail(eEmail)
-    {
-        var filter = /^([0-9a-zA-Z]+[-._+&amp;])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$/;
-        if(filter.test(eEmail))
-            return true;
-        else
-            return false;
-    }
-
-}
-function validateContact(contact) {
-    if (contact === "") {
-        $("#errorContact").text("Please enter a contact name.").show();
-
-        //fade out the error text when the user clicks on the textbox
-        $("#txtContact").on('focus',function(event) {
-            $("#errorContact").fadeOut('slow');
-        });
-
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
-        return false;
-    }
-    else if (isNaN(contact)) {
-        $("#errorContact").text("Only numbers are allowed in the field.").show();
-        //++errorInput;
-
-        //fade out the error text when the user clicks on the textbox
-        $("#txtContact").on('focus',function(event) {
-            $("#errorContact").fadeOut('slow');
-        });
-        return false;
-
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
-    }
-    else
-        return contact;
-}
-
-function validateAdditional(additional) {
-    if (additional === "") {
-        $("#errorAdditionalContact").text("Please enter a additional contact number,if not available use the previous contact number.").show();
-
-        //fade out the error text when the user clicks on the textbox
-        $("#txtAdditionalContact").on('focus',function(event) {
-            $("#errorAdditionalContact").fadeOut('slow');
-        });
-
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
-        return false;
-    }
-    else if (isNaN(additional)) {
-        $("#errorAdditionalContact").text("Only numbers are allowed in the field.").show();
-        //++errorInput;
-
-        //fade out the error text when the user clicks on the textbox
-        $("#txtAdditionalContact").on('focus',function(event) {
-            $("#errorAdditionalContact").fadeOut('slow');
-        });
-        return false;
-
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
-    }
-    else
-        return additional;
-}
-
-function validateOrganisation(organisation) {
-    var responseValue = '';
-    var search = "name="+organisation;
-    $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: URLlink + "/organisation/findByName?",
-        data: search,
-        async: false,
-        success: function (response) {
-            console.log(responseValue = response.organisationName);
+        function populateOrganisation(availableTags)
+        {
+            $("#txtOrganisation").autocomplete({
+                source: availableTags
+            });
         }
 
     });
 
-    if(responseValue != organisation)
-    {
-        $("#errorOrganisation").text("Organisation does not exist, please register the organisation").show();
-        //++errorInput;
 
-        //fade out the error text when the user clicks on the textbox
-        $("#txtOrganisation").on('focus',function(event) {
-            $("#errorOrganisation").fadeOut('slow');
-        });
-        return false;
+    function validateName(name) {
+        if (name === "") {
+            $("#errorName").text("Please enter a name.").show();
 
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
+            //fade out the error text when the user clicks on the textbox
+            $("#txtName").on('focus',function(event) {
+                $("#errorName").fadeOut('slow');
+            });
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+            return false;
+        }
+        else if (/[^a-zA-Z]/.test(name)) {
+            $("#errorName").text("Only alphabetic characters allowed in the field.").show();
+            //++errorInput;
+
+            //fade out the error text when the user clicks on the textbox
+            $("#txtName").on('focus',function(event) {
+                $("#errorName").fadeOut('slow');
+            });
+            return false;
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+        }
+        else
+            return name[0].toUpperCase() + name.substr(1).toLowerCase();
     }
 
-    else if (organisation === "") {
-        $("#errorOrganisation").text("Please enter an organisation name.").show();
+    function validateSurname(surname) {
+        if (surname === "") {
+            $("#errorSurname").text("Please enter a Surname.").show();
 
-        //fade out the error text when the user clicks on the textbox
-        $("#txtOrganisation").on('focus',function(event) {
-            $("#errorOrganisation").fadeOut('slow');
-        });
+            //fade out the error text when the user clicks on the textbox
+            $("#txtSurname").on('focus',function(event) {
+                $("#errorSurname").fadeOut('slow');
+            });
 
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
-        return false;
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+            return false;
+        }
+        else if (/[^a-zA-Z-, ]/.test(surname)) {
+            $("#errorSurname").text("Only alphabetic characters allowed in the field.").show();
+            //++errorInput;
+
+            //fade out the error text when the user clicks on the textbox
+            $("#txtSurname").on('focus',function(event) {
+                $("#errorSurname").fadeOut('slow');
+            });
+            return false;
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+        }
+        else
+            return surname[0].toUpperCase() + surname.substr(1).toLowerCase();
     }
-    else if (/[^a-zA-Z0-9-!@#% ]/.test(organisation)) {
-        $("#errorOrganisation").text("Characters allowed in this field are NUMBERS, LETTERS, !, -, @, #, %.").show();
-        //++errorInput;
+    function validateEmail(email) {
 
-        //fade out the error text when the user clicks on the textbox
-        $("#txtOrganisation").on('focus',function(event) {
-            $("#errorOrganisation").fadeOut('slow');
-        });
-        return false;
+        var matchingEmails = "";
+        //
 
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
+        // $.ajax({
+        //     type: "GET",
+        //     //dataType: "text",
+        //     url: "curlScripts/contributor/contributor.php",
+        //     data: {
+        //         email: email,
+        //         action: 'findByEmail'
+        //     },
+        //     async: false,
+        //     success: function(response)
+        //     {
+        //         var results = response.split("|");
+        //         matchingEmails = results[0];
+        //     }
+        //
+        // });
+        //
+        // if(matchingEmails == "Exists")
+        // {
+        //     $("#errorEmail").html("The email address already exists, please try again");
+        //     $("#txtEmail").on('focus',function(event){
+        //         $("#errorEmail").fadeOut('slow');
+        //     });
+        //     event.preventDefault();
+        //     return false;
+        // }
+        if (email === "") {
+            $("#errorEmail").text("Please enter a email address.").show();
+
+            //fade out the error text when the user clicks on the textbox
+            $("#txtEmail").on('focus',function(event) {
+                $("#errorEmail").fadeOut('slow');
+            });
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+            return false;
+        }
+        else if(validEmail(email) === false) {
+            $("#errorEmail").text("Email is invalid! Please try again.").show();
+            //++errorInput;
+            //fade out the error text when the user clicks on the textbox
+            $("#txtEmail").on('focus',function(event) {
+                $("#errorEmail").fadeOut('slow');
+            });
+        }
+        else
+            return email;
+
+        function validEmail(eEmail)
+        {
+            var filter = /^([0-9a-zA-Z]+[-._+&amp;])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$/;
+            if(filter.test(eEmail))
+                return true;
+            else
+                return false;
+        }
+        //return false;
     }
-    else
-        return organisation[0].toUpperCase() + organisation.slice(1);
-}
+    function validateContact(contact) {
+        if (contact === "") {
+            $("#errorContact").text("Please enter a contact name.").show();
 
+            //fade out the error text when the user clicks on the textbox
+            $("#txtContact").on('focus',function(event) {
+                $("#errorContact").fadeOut('slow');
+            });
 
-function validatePosition(position) {
-    if (position === "") {
-        $("#errorPosition").text("Please enter the position of contributor.").show();
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+            return false;
+        }
+        else if (isNaN(contact)) {
+            $("#errorContact").text("Only numbers are allowed in the field.").show();
+            //++errorInput;
 
-        //fade out the error text when the user clicks on the textbox
-        $("#txtPosition").on('focus',function(event) {
-            $("#errorPosition").fadeOut('slow');
-        });
+            //fade out the error text when the user clicks on the textbox
+            $("#txtContact").on('focus',function(event) {
+                $("#errorContact").fadeOut('slow');
+            });
+            return false;
 
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
-        return false;
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+        }
+        else if (contact.length > 10 || contact.length < 10) {
+            $("#errorContact").text("Numbers cannot be more than Ten (10) characters long.").show();
+            //++errorInput;
+
+            //fade out the error text when the user clicks on the textbox
+            $("#txtContact").on('focus',function(event) {
+                $("#errorContact").fadeOut('slow');
+            });
+            return false;
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+        }
+        else
+            return contact;
     }
-    else if (/[^a-zA-Z ]/.test(position)) {
-        $("#errorPosition").text("Only alphabetic characters and space are allowed in the field.").show();
-        //++errorInput;
 
-        //fade out the error text when the user clicks on the textbox
-        $("#txtPosition").on('focus',function(event) {
-            $("#errorPosition").fadeOut('slow');
-        });
-        return false;
+    function validateAdditional(additional) {
+        if (additional === "") {
+            $("#errorAdditionalContact").text("Please enter a additional contact number,if not available use the previous contact number.").show();
 
-        //prevent the form from being submitted if there is an error
-        event.preventDefault();
+            //fade out the error text when the user clicks on the textbox
+            $("#txtAdditionalContact").on('focus',function(event) {
+                $("#errorAdditionalContact").fadeOut('slow');
+            });
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+            return false;
+        }
+        else if (isNaN(additional)) {
+            $("#errorAdditionalContact").text("Only numbers are allowed in the field.").show();
+            //++errorInput;
+
+            //fade out the error text when the user clicks on the textbox
+            $("#txtAdditionalContact").on('focus',function(event) {
+                $("#errorAdditionalContact").fadeOut('slow');
+            });
+            return false;
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+        }
+        else if (additional.length  > 10 || additional.length  < 10) {
+            $("#errorAdditionalContact").text("Numbers cannot be more than Ten (10) characters long.").show();
+            //++errorInput;
+
+            //fade out the error text when the user clicks on the textbox
+            $("#txtAdditionalContact").on('focus',function(event) {
+                $("#errorAdditionalContact").fadeOut('slow');
+            });
+            return false;
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+        }
+        else
+            return additional;
     }
-    else
-        return position[0].toUpperCase() + position.slice(1);
-}
 
-function editContributor() {
+    function validateOrganisation(organisation) {
 
-    var name = validateName($.trim($("#txtName").val()));
-    var surname = validateSurname($.trim($("#txtSurname").val()));
-    var email = validateEmail($.trim($("#txtEmail").val()));
-    var contact = validateContact($.trim($("#txtContact").val()));
-    var additionalContact = validateAdditional($.trim($("#txtAdditionalContact").val()));
-    var organisation = validateOrganisation($.trim($("#txtOrganisation").val()));
-    var position = validatePosition($.trim($("#txtPosition").val()));
-
-    if (name == false || surname == false || email == false || contact == false
-        || additionalContact == false || organisation == false || position == false)
-    {
-        event.preventDefault();
-    }
-    else {
-        var contributorData = "id="+sessionStorage.getItem("contributorId")+"&name=" + name + "&surname=" + surname + "&email=" + email +
-            "&position=" + position + "&contact=" + contact + "&additionalContact=" + additionalContact;
-        var search = "name=" + organisation;
-        var organisationId = 0;
+        //var responseValue = '';
+        //var search = "name="+organisation;
         $.ajax({
             type: "GET",
-            dataType: "json",
-            url: URLlink + "/organisation/findByName?",
-            data: search,
-            async: false,
+            //dataType: "json",
+            url: "curlScripts/organisation/organisation.php?",
+            data: {
+                search: organisation,
+                action: 'findByName'
+            },
+            async: true,
             success: function (response) {
-                organisationId = response.id;
-
-                $.ajax({
-                    type: "PUT",
-                    dataType: "text",
-                    url: URLlink + "/contributor/" + organisationId + "/updateContributor?",
-                    data: contributorData,
-                    async: false,
-                    success: function (response) {
-                        location.href = "contributor.php";
-                    },
-                    error: function (xhr) {
-                        alert("Edit Customer Failed");
-                    }
-                });
+                var results = response.split("|");
+                validateName(organisation, results[0])
             }
+
         });
-        event.preventDefault();
+
+        function validateName(organisation, replyFromServer)
+        {
+            if(organisation != replyFromServer)
+            {
+                $("#errorOrganisation").text("Organisation does not exist, please register the organisation").show();
+                //++errorInput;
+
+                //fade out the error text when the user clicks on the textbox
+                $("#txtOrganisation").on('focus',function(event) {
+                    $("#errorOrganisation").fadeOut('slow');
+                });
+                return false;
+
+                //prevent the form from being submitted if there is an error
+                event.preventDefault();
+            }
+
+        }
+
+        if (organisation === "") {
+            $("#errorOrganisation").text("Please enter an organisation name.").show();
+
+            //fade out the error text when the user clicks on the textbox
+            $("#txtOrganisation").on('focus',function(event) {
+                $("#errorOrganisation").fadeOut('slow');
+            });
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+            return false;
+        }
+        else if (/[^a-zA-Z0-9-!@#% ]/.test(organisation)) {
+            $("#errorOrganisation").text("Characters allowed in this field are NUMBERS, LETTERS, !, -, @, #, %.").show();
+            //++errorInput;
+
+            //fade out the error text when the user clicks on the textbox
+            $("#txtOrganisation").on('focus',function(event) {
+                $("#errorOrganisation").fadeOut('slow');
+            });
+            return false;
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+        }
+        else
+        {
+            return organisation[0].toUpperCase() + organisation.slice(1);
+        }
+
     }
 
-}
 
+    function validatePosition(position) {
+        if (position === "") {
+            $("#errorPosition").text("Please enter the position of contributor.").show();
+
+            //fade out the error text when the user clicks on the textbox
+            $("#txtPosition").on('focus',function(event) {
+                $("#errorPosition").fadeOut('slow');
+            });
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+            return false;
+        }
+        else if (/[^a-zA-Z ]/.test(position)) {
+            $("#errorPosition").text("Only alphabetic characters and space are allowed in the field.").show();
+            //++errorInput;
+
+            //fade out the error text when the user clicks on the textbox
+            $("#txtPosition").on('focus',function(event) {
+                $("#errorPosition").fadeOut('slow');
+            });
+            return false;
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+        }
+        else
+            return position[0].toUpperCase() + position.slice(1);
+    }
+
+    $("#EditContributor").click(function(event){
+
+        var id = sessionStorage.getItem('contributorId');
+        console.log(id);
+        var name = validateName($.trim($("#txtName").val()));
+        var surname = validateSurname($.trim($("#txtSurname").val()));
+        var email = validateEmail($.trim($("#txtEmail").val()));
+        var contact = validateContact($.trim($("#txtContact").val()));
+        var additionalContact = validateAdditional($.trim($("#txtAdditionalContact").val()));
+        var organisation = validateOrganisation($.trim($("#txtOrganisation").val()));
+        var position = validatePosition($.trim($("#txtPosition").val()));
+
+        if (name == false || surname == false || email == false || contact == false
+            || additionalContact == false || organisation == false || position == false)
+        {
+            event.preventDefault();
+        }
+        else {
+
+            $.ajax({
+                type: "GET",
+                //dataType: "json",
+                url: "curlScripts/organisation/organisation.php?",
+                data: {
+                    search: organisation,
+                    action: 'findByName'
+                },
+                async: true,
+                success: function (response) {
+                    var results = response.split("|");
+                    $.ajax({
+                        type: "GET",
+                        //dataType: "json",
+                        url: "curlScripts/contributor/contributor.php?",
+                        data: {
+                            id: id,
+                            name: name,
+                            surname: surname,
+                            email: email,
+                            position: position,
+                            contact: contact,
+                            additionalContact: additionalContact,
+                            organisation: results[1],
+                            action: 'editContributor'
+                        },
+                        async: true,
+                        success: function (response) {
+                            console.log(JSON.parse(response));
+                            location.href="contributor.php";
+                        },
+                        error: function(xhr){
+                            alert("Adding Contributor Failed");
+                        }
+                    });
+                }
+            });
+        }
+        event.preventDefault();
+    });
+});

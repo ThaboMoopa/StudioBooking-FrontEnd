@@ -3,7 +3,7 @@
  */
 $(document).ready(function(){
     //var URLlink = "http://localhost:8080";
-    var edit_button = 0;
+    //var edit_button = 0;
 
     $.ajax({
         type: "GET",
@@ -30,19 +30,22 @@ $(document).ready(function(){
             });
             htmlData += '</tr>';
             $("#table tbody").append(htmlData);
+
+            //function to make sure the edit href above are triggered
+            $("a#edit").click(function(){
+
+                var edit_button = $(this).data('value');
+                alert(edit_button);
+                //load id into session variable
+                sessionStorage.setItem("contributorId", edit_button);
+
+
+            });
         },
         error: function(xhr){
             alert("Connection to database unavailable, make sure you connected to the server!");
         }
     });
 
-    //function to make sure the edit href above are triggered
-    $("a#edit").click(function(){
-        edit_button = $(this).data('value');
 
-        //load id into session variable
-        sessionStorage.setItem("contributorId", edit_button);
-
-
-    });
 });
