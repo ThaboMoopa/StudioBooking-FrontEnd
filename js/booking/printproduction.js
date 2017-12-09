@@ -6,45 +6,54 @@
  */
 $(document).ready(function()
 {
-    var programName = '';
-    var programTime = '';
-    var URLlink = "http://localhost:8080";
-    $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: URLlink + "/programSlot/readProgramSlot?",
-        data: "id="+sessionStorage.getItem("programSelected"),
-        async: false,
-        success: function (response) {
-            programName = response.name;
-            programTime = response.time;
-        }
-    });
-
-
+    alert('im in');
+    var programName = ''
     var contributorName = '';
     var contributorSurname = '';
     var contributorEmail = '';
-    var organisation = '';
+    //var organisation = '';
     var position = '';
     var contact = '';
     var alternativeContact = '';
+
+    //var URLlink = "http://localhost:8080";
     $.ajax({
         type: "GET",
-        dataType: "json",
-        url: URLlink + "/contributor/readContributor?",
-        data: "id="+sessionStorage.getItem("contributorSelected"),
-        async: false,
+        //dataType: "json",
+        url: "curlScripts/programSlot/programSlot.php?",
+        data: {
+            id: sessionStorage.getItem("programSelected"),
+            action: 'readProgramSlot'
+        },
+        async: true,
         success: function (response) {
-            contributorName = response.name;
-            contributorSurname = response.surname;
-            contributorEmail = response.email;
-            organisation = response.organisation;
-            position = response.position;
-            contact = response.contact;
-            alternativeContact = response.additionalContact;
-        }
-    });
+
+            var programName = JSON.parse(response).name;
+            var programTime = JSON.parse(response).time;
+
+
+
+
+    $.ajax({
+        type: "GET",
+        //dataType: "json",
+        url: "curlScripts/contributor/contributor.php?",
+        data: {
+            id: sessionStorage.getItem("contributorSelected"),
+            action: 'readCont'
+        },
+        async: true,
+        success: function (response) {
+            console.log(response);
+            contributorName = JSON.parse(response).name;
+            contributorSurname = JSON.parse(response).surname;
+            contributorEmail = JSON.parse(response).email;
+            var organisation = JSON.parse(response).organisation.organisationName;
+            position = JSON.parse(response).position;
+            contact = JSON.parse(response).contact;
+            alternativeContact = JSON.parse(response).additionalContact;
+            console.log(programName);
+
     $(function() {
         var docDefinition = {
             content: [
@@ -66,12 +75,12 @@ $(document).ready(function()
                             [{text: 'Title of file on RCS '}, {text: programName, colSpan: 3}, {}, {}],
                             [{text: 'Time of slot'}, {text: programTime}, {text: 'Broadcasting date '}, {text: sessionStorage.getItem("rcsDates")}],
                             [{text: 'Interviewee /-s'}, {text: contributorName}, {text: 'Surname'}, {text: contributorSurname}],
-                            [{text: 'Organisation'}, {text: sessionStorage.getItem("organisationId")}, {text: 'Position'}, {text: position}],
+                            [{text: 'Organisation'}, {text: organisation}, {text: 'Position'}, {text: position}],
                             [{text: 'Contact Details'}, {text: contact}, {text: 'Alternative Contact'}, {text: alternativeContact}],
                             [{text: 'E-Mail'}, {text: contributorEmail, colSpan: 3}, {}, {}],
                             [{text: 'Interviewer'}, {text: sessionStorage.getItem("username"), colSpan: 3}, {}, {}],
                             [{text: 'Technical'}, {text: sessionStorage.getItem("Technical"), colSpan: 3}, {}, {}],
-                            [{text: 'Additional Information'}, {
+                             [{text: 'Additional Information'}, {
                                 text: sessionStorage.getItem("AdditionalInfo"),
                                 colSpan: 3
                             }, {}, {}],
@@ -87,6 +96,11 @@ $(document).ready(function()
 // download the PDF
         pdfMake.createPdf(docDefinition).download('productionSheet.pdf');
     });
+        }
+    });
+        }
+    });
+
 
 });
 
