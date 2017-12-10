@@ -61,4 +61,5 @@ $(document).ready(function(){
     <br />
     <br />
     <br />
+    <div class="modal"><!-- Place at bottom of page --></div>
 <?php  include("templates/inc_footer.html"); ?>

@@ -31,5 +31,5 @@ include("templates/inc_header.html");
     <br />
     <br />
 
-
+    <div class="modal"><!-- Place at bottom of page --></div>
 <?php  include("templates/inc_footer.html"); ?>

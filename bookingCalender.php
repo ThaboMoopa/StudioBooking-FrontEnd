@@ -31,7 +31,7 @@ include("templates/inc_header.html");
                     </tr>
                     <thead>
                     <tbody>
-                    <div id="editAndDeleteButtons"></div>
+<!--                    <div id="editAndDeleteButtons"></div>-->
                     </tbody>
                 </table>
             </div>
@@ -53,5 +53,5 @@ include("templates/inc_header.html");
     <br />
     <br />
     <br />
-
+    <div class="modal"><!-- Place at bottom of page --></div>
 <?php  include("templates/inc_footer.html"); ?>

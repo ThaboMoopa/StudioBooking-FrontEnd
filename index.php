@@ -44,5 +44,6 @@ include('templates/inc_login.html');
     <br />
     <br />
     <br />
+    <div class="modal"><!-- Place at bottom of page --></div>
     <script src="js/index/login.js"></script>
 <?php include('templates/inc_footer.html'); ?>

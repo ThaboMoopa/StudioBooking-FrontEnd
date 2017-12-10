@@ -3,6 +3,7 @@
  */
 $(document).ready(function(){
 
+
     //console.log(URLlink);
     function validateEmail(email) {
             $.ajax({

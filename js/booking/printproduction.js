@@ -6,7 +6,6 @@
  */
 $(document).ready(function()
 {
-    alert('im in');
     var programName = ''
     var contributorName = '';
     var contributorSurname = '';
@@ -16,7 +15,6 @@ $(document).ready(function()
     var contact = '';
     var alternativeContact = '';
 
-    //var URLlink = "http://localhost:8080";
     $.ajax({
         type: "GET",
         //dataType: "json",
@@ -30,9 +28,6 @@ $(document).ready(function()
 
             var programName = JSON.parse(response).name;
             var programTime = JSON.parse(response).time;
-
-
-
 
     $.ajax({
         type: "GET",
