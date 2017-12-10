@@ -37,7 +37,6 @@ include("templates/inc_header.html");
                         </tr>
                         <thead>
                         <tbody>
-                        <div id="editAndDeleteButtons"></div>
                         </tbody>
                     </table>
                 </div>

@@ -48,5 +48,5 @@ include("templates/inc_header.html");
     <br />
     <br />
     <br />
-    <div class="modal"><!-- Place at bottom of page --></div>
+    <div class="modal" value="Loading... Please wait!"><!-- Place at bottom of page --></div>
 <?php  include("templates/inc_footer.html"); ?>
