@@ -16,6 +16,7 @@
     <script src="js/additional/pdfmake.js"></script>
     <script src="js/additional/vfs_fonts.js"></script>
     <script src="js/index/access.js"></script>
+    <script src="js/additional/loading.js"></script>
 
 
     <style>
@@ -43,7 +44,31 @@
         {
             background: rgba(255, 215, 0, 0.24);
         }
+         .modal {
+                display:    none;
+                position:   fixed;
+                z-index:    1000;
+                top:        0;
+                left:       0;
+                height:     100%;
+                width:      100%;
+                background: rgba( 255, 255, 255, .8 )
+                url('http://i.stack.imgur.com/FhHRx.gif')
+                50% 50%
+                no-repeat;
+            }
 
+            /* When the body has the loading class, we turn
+               the scrollbar off with overflow:hidden */
+            body.loading {
+                overflow: hidden;
+            }
+
+            /* Anytime the body has the loading class, our
+               modal element will be visible */
+            body.loading .modal {
+                display: block;
+            }
 
     </style>
 
@@ -80,7 +105,6 @@
                 </div>
             </div>
             &nbsp;
-          &nbsp;
           <div class="dropdown">
             <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Contributors

@@ -59,6 +59,7 @@ $(document).ready(function(){
 
                 function displayTable(arrayDetails,arrayTime)
                 {
+                    $("#table tbody").empty();
                     var htmlData = '';
                     htmlData += '<tr>';
                     $.each(arrayTime, function(key, value)
