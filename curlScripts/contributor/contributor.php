@@ -17,47 +17,48 @@ if(isset($_GET['action'])) {
     $contact = $_GET['contact'];
     $additionalContact = $_GET['additionalContact'];
     $organisation = $_GET['organisation'];
+    $link = 'http://192.168.0.104:8443';
 
     $id = $_GET['id'];
 
     if($_GET['action'] == 'addContributor') {
-        addContributor($name,$surname,$email,$position,$contact,$additionalContact,$organisation);
+        addContributor($link,$name,$surname,$email,$position,$contact,$additionalContact,$organisation);
     }
     elseif($_GET['action'] == 'editContributor') {
-        editContributor($id, $name,$surname,$email,$position,$contact,$additionalContact,$organisation);
+        editContributor($link,$id, $name,$surname,$email,$position,$contact,$additionalContact,$organisation);
     }
     elseif($_GET['action'] == 'deleteContributor'){
-        deleteContributor($id);
+        deleteContributor($link,$id);
     }
     elseif($_GET['action'] == 'readContributor'){
-        readContributor($id);
+        readContributor($link,$id);
     }
     elseif($_GET['action'] == 'readCont'){
-        readCont($id);
+        readCont($link,$id);
     }
     elseif($_GET['action']=='findAll')
     {
-        findAll();
+        findAll($link);
     }
     elseif($_GET['action']=='findByEmail')
     {
-        findByEmail($email);
+        findByEmail($link,$email);
     }
     elseif($_GET['action']=='findAllContributors')
     {
-        findAllContributors();
+        findAllContributors($link);
     }
     elseif($_GET['action']=='findByNameOrderName')
     {
-        findByNameOrderName($name);
+        findByNameOrderName($link,$name);
     }
 }
-function findByNameOrderName($name)
+function findByNameOrderName($link,$name)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "8091",
-        CURLOPT_URL => "http://localhost:8091/contributor/findByNameOrderName?name=$name",
+        CURLOPT_URL => "$link/contributor/findByNameOrderName?name=$name",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -82,13 +83,13 @@ function findByNameOrderName($name)
 //    }
 }
 
-function readCont($id)
+function readCont($link,$id)
 {
 
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "8091",
-        CURLOPT_URL => "http://localhost:8091/contributor/readContributor?id=$id",
+        CURLOPT_URL => "$link/contributor/readContributor?id=$id",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -112,12 +113,12 @@ function readCont($id)
 //        echo "".htmlentities($results[$key]->organisationName)."|";
 //    }
 }
-function deleteContributor($id)
+function deleteContributor($link,$id)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "8091",
-        CURLOPT_URL => "http://localhost:8091/contributor/deleteContributor?id=$id",
+        CURLOPT_URL => "$link/contributor/deleteContributor?id=$id",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -141,13 +142,13 @@ function deleteContributor($id)
 //        echo "".htmlentities($results[$key]->organisationName)."|";
 //    }
 }
-function readContributor($id)
+function readContributor($link,$id)
 {
 
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "8091",
-        CURLOPT_URL => "http://localhost:8091/contributor/readContributor?id=$id",
+        CURLOPT_URL => "$link/contributor/readContributor?id=$id",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -171,12 +172,12 @@ function readContributor($id)
         echo "".htmlentities($results[$key]->organisationName)."|";
     }
 }
-function editContributor($id, $name,$surname,$email,$position,$contact,$additionalContact,$organisation)
+function editContributor($link,$id, $name,$surname,$email,$position,$contact,$additionalContact,$organisation)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "8091",
-        CURLOPT_URL => "http://localhost:8091/contributor/$organisation/updateContributor?id=$id&name=$name&surname=$surname&email=$email&position=$position&contact=$contact&additionalContact=$additionalContact",
+        CURLOPT_URL => "$link/contributor/$organisation/updateContributor?id=$id&name=$name&surname=$surname&email=$email&position=$position&contact=$contact&additionalContact=$additionalContact",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -195,12 +196,12 @@ function editContributor($id, $name,$surname,$email,$position,$contact,$addition
     $results = json_decode($response);
 }
 
-function addContributor($name,$surname,$email,$position,$contact,$additionalContact,$organisation)
+function addContributor($link,$name,$surname,$email,$position,$contact,$additionalContact,$organisation)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "8091",
-        CURLOPT_URL => "http://localhost:8091/contributor/$organisation/addContributor?name=$name&surname=$surname&email=$email&position=$position&contact=$contact&additionalContact=$additionalContact",
+        CURLOPT_URL => "$link/contributor/$organisation/addContributor?name=$name&surname=$surname&email=$email&position=$position&contact=$contact&additionalContact=$additionalContact",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -218,12 +219,12 @@ function addContributor($name,$surname,$email,$position,$contact,$additionalCont
     curl_close($curl);
     $results = json_decode($response);
 }
-function findAll()
+function findAll($link)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "8091",
-        CURLOPT_URL => "http://localhost:8091/organisation/findAll?",
+        CURLOPT_URL => "$link/organisation/findAll?",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -247,12 +248,12 @@ function findAll()
        echo "".htmlentities($results[$key]->organisationName)."|";
     }
 }
-function findByEmail($email)
+function findByEmail($link,$email)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "8091",
-        CURLOPT_URL => "http://localhost:8091/contributor/findByEmail?email=$email",
+        CURLOPT_URL => "$link/contributor/findByEmail?email=$email",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -274,12 +275,12 @@ function findByEmail($email)
     //echo $results;
     echo "".htmlentities($response)."|";
 }
-function findAllContributors()
+function findAllContributors($link)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "8091",
-        CURLOPT_URL => "http://localhost:8091/contributor/findAll?",
+        CURLOPT_URL => "$link/contributor/findAll?",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,

@@ -19,38 +19,38 @@ if(isset($_GET['action'])) {
     $programId = $_GET['programId'];
     $contributorId = $_GET['contributorId'];
     $user = $_GET['user'];
-
+    $link = 'http://192.168.0.104:8443';
 
 
     if($_GET['action'] == 'times') {
-        times();
+        times($link);
     } 
     elseif($_GET['action'] == 'findByBookingDate') {
-        findByBookingDate($bookingDate);
+        findByBookingDate($link,$bookingDate);
     }
     elseif($_GET['action'] == 'findByBookingDateAndTime') {
-        findByBookingDateAndTime($bookingDate,$bookingTime );
+        findByBookingDateAndTime($link,$bookingDate,$bookingTime );
     }
     elseif($_GET['action'] == 'readBooking'){
-        readBooking($bookingId); 
+        readBooking($link,$bookingId);
     }
     elseif($_GET['action'] == 'deleteBooking'){
-        deleteBooking($bookingId);
+        deleteBooking($link,$bookingId);
     }
     elseif($_GET['action'] == 'findByName'){
-        findByName($name);
+        findByName($link,$name);
     }
     elseif($_GET['action'] == 'addBooking'){
-        addBooking($user,$bookingTime,$bookingLength,$bookingTechnical,$bookingDate,$additionalInfo,$rcsDates,$programId,$contributorId);
+        addBooking($link,$user,$bookingTime,$bookingLength,$bookingTechnical,$bookingDate,$additionalInfo,$rcsDates,$programId,$contributorId);
     }
     
 }
-function addBooking($user, $bookingTime,$bookingLength,$bookingTechnical,$bookingDate,$additionalInfo,$rcsDates,$programId,$contributorId)
+function addBooking($link,$user, $bookingTime,$bookingLength,$bookingTechnical,$bookingDate,$additionalInfo,$rcsDates,$programId,$contributorId)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "1080",
-        CURLOPT_URL => "http://localhost:8091/booking/$programId/$contributorId/addBooking?user=$user&bookingDate=$bookingDate&bookingTime=$bookingTime&technical=$bookingTechnical&additionalInfo=$additionalInfo&rcsDates=$rcsDates",
+        CURLOPT_URL => "$link/booking/$programId/$contributorId/addBooking?user=$user&bookingDate=$bookingDate&bookingTime=$bookingTime&technical=$bookingTechnical&additionalInfo=$additionalInfo&rcsDates=$rcsDates",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -73,12 +73,12 @@ function addBooking($user, $bookingTime,$bookingLength,$bookingTechnical,$bookin
 //
 //    }
 }
-function findByName($name)
+function findByName($link,$name)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "1080",
-        CURLOPT_URL => "http://localhost:8091/contributor/Search?search=$name",
+        CURLOPT_URL => "$link/contributor/Search?search=$name",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -101,12 +101,12 @@ function findByName($name)
 //
 //    }
 }
-function times()
+function times($link)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "1080",
-        CURLOPT_URL => "http://localhost:8091/studioTimes/findAll?",
+        CURLOPT_URL => "$link/studioTimes/findAll?",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -130,12 +130,12 @@ function times()
 //    }
 
 }
-function findByBookingDateAndTime($bookingDate, $bookingTime)
+function findByBookingDateAndTime($link,$bookingDate, $bookingTime)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "1080",
-        CURLOPT_URL => "http://localhost:8091/booking/findByBookingDateAndTime?bookingDate=$bookingDate&bookingTime=$bookingTime",
+        CURLOPT_URL => "$link/booking/findByBookingDateAndTime?bookingDate=$bookingDate&bookingTime=$bookingTime",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -164,12 +164,12 @@ function findByBookingDateAndTime($bookingDate, $bookingTime)
 
 //}
 }
-function findByBookingDate($bookingDate)
+function findByBookingDate($link,$bookingDate)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "1080",
-        CURLOPT_URL => "http://localhost:8091/booking/findAllByBookingDate?bookingDate=$bookingDate",
+        CURLOPT_URL => "$link/booking/findAllByBookingDate?bookingDate=$bookingDate",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -199,12 +199,12 @@ function findByBookingDate($bookingDate)
 //}   
 }
 
-function readBooking($id)
+function readBooking($link,$id)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "1080",
-        CURLOPT_URL => "http://localhost:8091/booking/readBooking?id=$id",
+        CURLOPT_URL => "$link/booking/readBooking?id=$id",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -241,12 +241,12 @@ function readBooking($id)
     echo "".htmlentities($results->id)."|";
 
 }
-function deleteBooking($id)
+function deleteBooking($link,$id)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "1080",
-        CURLOPT_URL => "http://localhost:8091/booking/deleteBooking?id=$id",
+        CURLOPT_URL => "$link/booking/deleteBooking?id=$id",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,

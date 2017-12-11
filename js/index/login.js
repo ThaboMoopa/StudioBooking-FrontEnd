@@ -127,10 +127,10 @@ $(document).ready(function(){
 
                     if(JSON.parse(response).email == email)
                     {
-                        if(JSON.parse(response) == password)
+                        if(JSON.parse(response).password == password)
                         {
                             //sessionStorage.setItem("id",results[2]);
-                            sessionStorage.setItem("username",results.name);
+                            sessionStorage.setItem("username",JSON.parse(response).name);
                             homepage();
                             event.preventDefault();
                         }

@@ -7,38 +7,39 @@
  */
 if(isset($_GET['action'])) {
     $search = $_GET['search'];
+    $link = 'http://192.168.0.104:8443';
     //$name = $_GET['name'];
     //$webAddress = $_GET['website'];
     //$contact = $_GET['contact'];
     //$additionalContact = $_GET['additionalContact'];
 
     if($_GET['action'] == 'findByName') {
-        findByName($search);
+        findByName($link,$search);
     }
     elseif($_GET['action'] == 'addOrganisation') {
-        addOrganisation($name,$webAddress,$contact,$additionalContact);
+        addOrganisation($link,$name,$webAddress,$contact,$additionalContact);
     }
     elseif($_GET['action'] == 'editOrganisation') {
-        editContributor($bookingDate,$bookingTime);
+        editContributor($link,$bookingDate,$bookingTime);
     }
     elseif($_GET['action'] == 'deleteOrganisation'){
-        deleteContributor($bookingId);
+        deleteContributor($link,$bookingId);
     }
     elseif($_GET['action'] == 'readOrganisation'){
-        readContributor($bookingId);
+        readContributor($link,$bookingId);
     }
     elseif($_GET['action']=='findAll')
     {
-        findAll();
+        findAll($link);
     }
 }
-function findAll()
+function findAll($link)
 {
     //echo "im in";
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_PORT => "8091",
-        CURLOPT_URL => "http://localhost:8091/technical/findAll?",
+        //CURLOPT_PORT => "8091",
+        CURLOPT_URL => "$link/technical/findAll?",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,

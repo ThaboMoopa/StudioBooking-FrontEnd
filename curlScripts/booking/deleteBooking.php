@@ -6,11 +6,12 @@
  * Time: 13:15
  */
 $id = $_GET['id'];
+$link = 'http://192.168.0.104:8443';
 
 $curl = curl_init();
 curl_setopt_array($curl, array(
-    CURLOPT_PORT => "8091",
-    CURLOPT_URL => "http://localhost:8091/booking/deleteBooking?id=$id",
+    //CURLOPT_PORT => "8091",
+    CURLOPT_URL => "$link/booking/deleteBooking?id=$id",
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => "",
     CURLOPT_MAXREDIRS => 10,
