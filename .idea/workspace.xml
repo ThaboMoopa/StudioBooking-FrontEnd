@@ -3,13 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="81d3b0c8-3523-4010-9d8b-cd370d2fb6aa" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/curlScripts/booking/bookingCalender.php" afterPath="$PROJECT_DIR$/curlScripts/booking/bookingCalender.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/curlScripts/booking/deleteBooking.php" afterPath="$PROJECT_DIR$/curlScripts/booking/deleteBooking.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/curlScripts/contributor/contributor.php" afterPath="$PROJECT_DIR$/curlScripts/contributor/contributor.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/curlScripts/organisation/organisation.php" afterPath="$PROJECT_DIR$/curlScripts/organisation/organisation.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/curlScripts/programSlot/programSlot.php" afterPath="$PROJECT_DIR$/curlScripts/programSlot/programSlot.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/curlScripts/technical/technical.php" afterPath="$PROJECT_DIR$/curlScripts/technical/technical.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/index/login.js" afterPath="$PROJECT_DIR$/js/index/login.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -1010,7 +1003,7 @@
       <workItem from="1512664707491" duration="11442000" />
       <workItem from="1512726325555" duration="12099000" />
       <workItem from="1512763068130" duration="17456000" />
-      <workItem from="1513005565776" duration="4407000" />
+      <workItem from="1513005565776" duration="4601000" />
     </task>
     <task id="LOCAL-00001" summary="changes made">
       <created>1512684120174</created>
@@ -1075,11 +1068,18 @@
       <option name="project" value="LOCAL" />
       <updated>1513016250257</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="fixes">
+      <created>1513017325403</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1513017325403</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="184724000" />
+    <option name="totallyTimeSpent" value="184918000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
