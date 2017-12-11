@@ -33,11 +33,11 @@ $(document).ready(function(){
                         htmlData += '<td><a href="addBookingSecondPart.php" class="btn btn-outline-warning" data-value="'+value.id+'" id="selectContributor">Select</a></td>';
                         htmlData += '</tr>';
                         $("#table tbody").append(htmlData);
-                        console.log(sessionStorage.setItem("organisationId", organisationId));
+                        sessionStorage.setItem("organisationId", organisationId);
 
                         $("a#selectContributor").click(function(){
                             var contributorId = $(this).data('value');
-                            console.log(sessionStorage.setItem("contributorSelected", contributorId));
+                            sessionStorage.setItem("contributorSelected", contributorId);
 
                         });
                     });
@@ -65,7 +65,7 @@ $(document).ready(function(){
                 async: true,
                 success: function (response) {
                     $("#table tbody").empty();
-                    //console.log(response);
+
                     $.each(JSON.parse(response), function(key, value){
 
                         var htmlData = '';
@@ -126,6 +126,13 @@ $(document).ready(function(){
                     async: true,
                     success: function (response) {
                         $("#table tbody").empty();
+                        $('#times')
+                            .find('option')
+                            .remove()
+                            .end()
+                            .append('<option value="whatever">Select time</option>')
+                            .val('whatever')
+                        ;
                         var datesArray = [];
 
                         $.each(JSON.parse(response), function(timeKey, timeValue){
@@ -133,11 +140,6 @@ $(document).ready(function(){
                             $('<option/>').val(timeValue.times).html(timeValue.times).appendTo('#times');
 
                        });
-                        // for (var i = 0; i < datesArray.length; i++) {
-                        //
-                        //     var htmlData = '';
-                        //     htmlData += '<tr>';
-                        //     htmlData += '<td>' + datesArray[i] + '</td>';
 
                             $.ajax({
                                 type: "GET",
@@ -151,7 +153,6 @@ $(document).ready(function(){
                                 success: function (data) {
                                     //console.log(JSON.parse(data.id));
                                     var arrayToholdFromServer = [];
-                                    //htmlData += '<td>' + JSON.parse(data) + '</td>';
 
                                     $.each(JSON.parse(data), function(key, values){
                                         arrayToholdFromServer.push(values);
@@ -159,7 +160,6 @@ $(document).ready(function(){
                                     });
 
                                     displayTable(arrayToholdFromServer, datesArray);
-
                                 }
                             });
                     },
@@ -175,7 +175,6 @@ $(document).ready(function(){
                     $.each(arrayTime, function(key, value)
                     {
                         htmlData += '<td>'+value+'</td>';
-
 
                         $.each(arrayDetails, function(keys, values)
                         {
@@ -216,20 +215,30 @@ $(document).ready(function(){
             },
             async: true,
             success: function (response) {
-                //var results = JSON.parse(response);
-                $.each(JSON.parse(response),function (key,value){
-                    if(value == bookingTimeSelected)
-                    {
-                        $("#errorTimes").text("Booking time already taken.").show();
 
-                        //fade out the error text when the user clicks on the textbox
-                        $("#times").on('click',function(event) {
-                            $("#errorTimes").fadeOut('slow');
-                        });
-                    }
-                });
+                if(response == ''){
+                    alert('empty');
+                }
+                else
+                {
+                    $.each(JSON.parse(response),function (key,value){
+                        if(value == bookingTimeSelected)
+                        {
+                            $("#errorTimes").text("Booking time already taken.").show();
 
-            }
+                            //fade out the error text when the user clicks on the textbox
+                            $("#times").on('click',function(event) {
+                                $("#errorTimes").fadeOut('slow');
+                            });
+                        }
+                    });
+                }
+
+
+            },
+            error: function(xhr){
+                alert("Error happend");
+    }
         });
 
     });

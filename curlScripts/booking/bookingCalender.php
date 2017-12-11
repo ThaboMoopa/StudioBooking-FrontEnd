@@ -151,7 +151,7 @@ function findByBookingDateAndTime($bookingDate, $bookingTime)
     $err = curl_error($curl);
     curl_close($curl);
 
-    $results = json_decode($response);
+   // $results = json_decode($response);
 
 //    echo "".htmlentities($results->bookingTime)."|";
 //    echo "".htmlentities($results->user)."|";
