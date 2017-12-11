@@ -7,20 +7,12 @@
  */
 if(isset($_GET['action'])) {
     $name = $_GET['name'];
-    $password = md5($_GET['password']);
+    $password = $_GET['password'];
     $email = $_GET['email'];
-//    $name = $_GET['name'];
-//    $bookingLength = $_GET['bookingLength'];
-//    $bookingTechnical = $_GET['bookingTechnical'];
-//    $additionalInfo = $_GET['additionalInfo'];
-//    $rcsDates = $_GET['rcsDates'];
-//    $programId = $_GET['programId'];
-//    $contributorId = $_GET['contributorId'];
-//    $user = $_GET['user'];
-
+    $link = 'http://192.168.0.104:8443';
 
     if($_GET['action'] == 'findAll') {
-        findAll();
+        findAll($link);
     }
 //    elseif($_GET['action'] == 'findByBookingDate') {
 //        findByBookingDate($bookingDate);
@@ -31,23 +23,78 @@ if(isset($_GET['action'])) {
 //    elseif($_GET['action'] == 'readBooking'){
 //        readBooking($bookingId);
 //    }
-//    elseif($_GET['action'] == 'deleteBooking'){
-//        deleteBooking($bookingId);
-//    }
-//    elseif($_GET['action'] == 'findByName'){
-//        findByName($name);
-//    }
+    elseif($_GET['action'] == 'findByEmail'){
+        findByEmail($link, $email);
+    }
+    elseif($_GET['action'] == 'login'){
+        login($email, $link, $password);
+    }
     elseif($_GET['action'] == 'addUser'){
-        addUser($name, $password, $email);
+        addUser($link, $name, $password, $email);
     }
 
 }
-function addUser($name, $password, $email)
+function findByEmail($link, $email)
+{
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        //CURLOPT_PORT => "8091",
+        CURLOPT_URL => "$link/user/findByEmail?email=$email",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+            "authorization: Basic dXNlcjpwYXNzd29yZA==",
+            "cache-control: no-cache"
+        ),
+    ));
+//,"postman-token: 6b0d34a9-8fb9-13c4-28fe-e81d41bef709"
+    echo $response = curl_exec($curl);
+
+    $err = curl_error($curl);
+    curl_close($curl);
+    $results = json_decode($response);
+}
+
+function login($email, $link, $password)
+{
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        //CURLOPT_PORT => "8091",
+        CURLOPT_URL => "$link/user/login?email=$email&password=$password",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+            "authorization: Basic dXNlcjpwYXNzd29yZA==",
+            "cache-control: no-cache"
+        ),
+    ));
+//,"postman-token: 6b0d34a9-8fb9-13c4-28fe-e81d41bef709"
+    echo $response = curl_exec($curl);
+
+    $err = curl_error($curl);
+    curl_close($curl);
+    $results = json_decode($response);
+
+}
+
+
+
+
+function addUser($link, $name, $password, $email)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "1080",
-        CURLOPT_URL => "http://localhost:8091/user/addUser?email=$email&password=$password&name=$name",
+        CURLOPT_URL => "$link/user/addUser?email=$email&password=$password&name=$name",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -70,12 +117,12 @@ function addUser($name, $password, $email)
 //
 //    }
 }
-function findAll()
+function findAll($link)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         //CURLOPT_PORT => "1080",
-        CURLOPT_URL => "http://localhost:8091/user/findAll?",
+        CURLOPT_URL => "$link/user/findAll?",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,

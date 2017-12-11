@@ -8,12 +8,15 @@ $(document).ready(function(){
     function validateEmail(email) {
             $.ajax({
                 type: "GET",
-                url: "curlScripts/user/userEmailCurl.php",
+                url: "curlScripts/user/user.php",
                 data: {
-                    email:email
+                    email:email,
+                    action: 'findByEmail'
                 },
+                async: true,
                 success: function (response) {
-                    if(response == "found")
+                    console.log(JSON.parse(response));
+                    if(JSON.parse(response).email == email)
                     {
                         return email;
                     }
@@ -112,21 +115,22 @@ $(document).ready(function(){
         else {
             $.ajax({
                 type: "GET",
-                url: "curlScripts/user/userlogin.php",
+                url: "curlScripts/user/user.php",
                 data: {
                     email:email,
-                    password:password
+                    password:password,
+                    action: 'login'
                 },
+                async: true,
                 success: function (response) {
                     event.preventDefault();
-                    var results = response.split("|");
-                    console.log(results[0]);
-                    if(results[0] == "email correct")
+
+                    if(JSON.parse(response).email == email)
                     {
-                        if(results[1] == "password correct")
+                        if(JSON.parse(response) == password)
                         {
                             //sessionStorage.setItem("id",results[2]);
-                            sessionStorage.setItem("username",results[2]);
+                            sessionStorage.setItem("username",results.name);
                             homepage();
                             event.preventDefault();
                         }
