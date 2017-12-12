@@ -231,7 +231,20 @@ function validateAdditional(additional) {
         //prevent the form from being submitted if there is an error
         event.preventDefault();
     }
-    else if (additional.length  > 10 || additional.length  < 10) {
+    else if (additional.length  > 10 ) {
+        $("#errorAdditionalContact").text("Numbers cannot be less than Ten (10) characters long.").show();
+        //++errorInput;
+
+        //fade out the error text when the user clicks on the textbox
+        $("#txtAdditionalContact").on('focus',function(event) {
+            $("#errorAdditionalContact").fadeOut('slow');
+        });
+        return false;
+
+        //prevent the form from being submitted if there is an error
+        event.preventDefault();
+    }
+    else if (additional.length  < 10) {
         $("#errorAdditionalContact").text("Numbers cannot be more than Ten (10) characters long.").show();
         //++errorInput;
 

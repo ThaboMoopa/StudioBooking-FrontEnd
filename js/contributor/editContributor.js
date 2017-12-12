@@ -14,7 +14,6 @@ $('#txtEmail').prop('readonly',true);
         },
         async: true,
         success: function (response) {
-            console.log(JSON.parse(response));
             //$('#txtName').
             document.getElementById('txtName').value = JSON.parse(response).name;
             document.getElementById('txtSurname').value = JSON.parse(response).surname;
@@ -23,19 +22,12 @@ $('#txtEmail').prop('readonly',true);
             document.getElementById('txtPosition').value = JSON.parse(response).position;
             document.getElementById('txtContact').value = JSON.parse(response).contact;
             document.getElementById('txtAdditionalContact').value = JSON.parse(response).additionalContact;
-
-
-
-
         },
         error: function(xhr){
             alert("Connection to server unavailable, check your connection to server");
         }
 
     });
-
-
-
 
     $("#txtOrganisation").on('keydown focus',function(event){
         $.ajax({
