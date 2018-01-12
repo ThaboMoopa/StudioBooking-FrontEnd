@@ -12,9 +12,10 @@ include("templates/inc_header.html");
     <div id="username"></div>
 <form>
     <div class="form-group">
+      <h1>Program Slots</h1>
         <table class="table" id="table">
             <thead>
-            <tr>
+            <tr style="background-color:#FAF0E6;">
                 <th>Name</th><th>Time Slot</th><th>Action</th>
             </tr>
             <thead>

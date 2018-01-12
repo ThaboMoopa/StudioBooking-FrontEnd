@@ -1,11 +1,11 @@
 /**
  * Created by thabomoopa on 27/11/2017.
  */
-/**
- * Created by thabomoopa on 24/11/2017.
- */
+
 $(document).ready(function()
 {
+	//var link = 'http://10.0.0.159:8080';
+	var link = 'http://localhost:8080';
     var programName = ''
     var contributorName = '';
     var contributorSurname = '';
@@ -17,37 +17,31 @@ $(document).ready(function()
 
     $.ajax({
         type: "GET",
-        //dataType: "json",
-        url: "curlScripts/programSlot/programSlot.php?",
-        data: {
-            id: sessionStorage.getItem("programSelected"),
-            action: 'readProgramSlot'
-        },
+        dataType: "json",
+        url: link + "/programSlot/readProgramSlot?",
+        data: "id=" + sessionStorage.getItem("programSelected"),
         async: true,
         success: function (response) {
 
-            var programName = JSON.parse(response).name;
-            var programTime = JSON.parse(response).time;
+            var programName = response.name;
+            var programTime = response.time;
 
     $.ajax({
         type: "GET",
-        //dataType: "json",
-        url: "curlScripts/contributor/contributor.php?",
-        data: {
-            id: sessionStorage.getItem("contributorSelected"),
-            action: 'readCont'
-        },
+        dataType: "json",
+        url: link + "/contributor/readContributor?",
+        data: "id="+sessionStorage.getItem("contributorSelected"),
         async: true,
         success: function (response) {
-            console.log(response);
-            contributorName = JSON.parse(response).name;
-            contributorSurname = JSON.parse(response).surname;
-            contributorEmail = JSON.parse(response).email;
-            var organisation = JSON.parse(response).organisation.organisationName;
-            position = JSON.parse(response).position;
-            contact = JSON.parse(response).contact;
-            alternativeContact = JSON.parse(response).additionalContact;
-            console.log(programName);
+            //console.log(response);
+            contributorName = response.name;
+            contributorSurname = response.surname;
+            contributorEmail = response.email;
+            var organisation = response.organisation.organisationName;
+            position = response.position;
+            contact = response.contact;
+            alternativeContact = response.additionalContact;
+            //console.log(programName);
 
     $(function() {
         var docDefinition = {
@@ -98,4 +92,3 @@ $(document).ready(function()
 
 
 });
-

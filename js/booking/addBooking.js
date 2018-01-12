@@ -3,23 +3,22 @@
  */
 
 $(document).ready(function(){
-    
+  //var link = 'http://10.0.0.159:8080';
+  var link = 'http://localhost:8080';
+
     //function to handle the first part of booking
     $(function(){
         $("#txtSearch").on('keydown', function(event){
             var search = $.trim($("#txtSearch").val());
             $.ajax({
                 type: "GET",
-                //dataType: "json",
-                url: "curlScripts/booking/bookingCalender.php?",
-                data: {
-                    name: search,
-                    action: 'findByName'
-                },
+                dataType: "json",
+                url: link + "/contributor/Search?",
+                data: 'search='+search,
                 async: true,
                 success: function (response) {
                     $("#table tbody").empty();
-                    $.each(JSON.parse(response), function(key, value){
+                    $.each(response, function(key, value){
                         var organisationId = value.organisation.id;
                         var htmlData = '';
                         htmlData += '<tr>';
@@ -43,7 +42,7 @@ $(document).ready(function(){
                     });
                 },
                 error: function(xhr){
-                    alert("Error happend");
+                    console.log("Error happend");
                 }
             });
         });
@@ -56,17 +55,14 @@ $(document).ready(function(){
             var search = $.trim($("#programSlot").val());
             $.ajax({
                 type: "GET",
-                //dataType: "json",
-                url: "curlScripts/programSlot/programSlot.php?",
-                data: {
-                    search: search,
-                    action: 'findByName'
-                },
+                dataType: "json",
+                url: link + "/programSlot/findByName?",
+                data: 'search=' + search,
                 async: true,
                 success: function (response) {
                     $("#table tbody").empty();
 
-                    $.each(JSON.parse(response), function(key, value){
+                    $.each(response, function(key, value){
 
                         var htmlData = '';
                         htmlData += '<tr>';
@@ -94,14 +90,11 @@ $(document).ready(function(){
     $(function(){
         $.ajax({
             type: "GET",
-           // dataType: "json",
-            url: "curlScripts/technical/technical.php?",
-            data: {
-                action: 'findAll'
-            },
+            dataType: "json",
+            url: link + "/technical/findAll?",
             async: true,
             success: function (response) {
-                $.each(JSON.parse(response), function(key, value){
+                $.each(response, function(key, value){
                     $('<option/>').val(value.name).html(value.name).appendTo('#items');
                 });
             }
@@ -118,11 +111,8 @@ $(document).ready(function(){
                 sessionStorage.setItem("dateOfBooking", dates);
                 $.ajax({
                     type: "GET",
-                    ///dataType: "json",
-                    url: 'curlScripts/booking/bookingCalender.php?',
-                    data: {
-                       action: 'times'
-                    },
+                    dataType: "json",
+                    url: link + "/studioTimes/findAll?",
                     async: true,
                     success: function (response) {
                         $("#table tbody").empty();
@@ -135,7 +125,7 @@ $(document).ready(function(){
                         ;
                         var datesArray = [];
 
-                        $.each(JSON.parse(response), function(timeKey, timeValue){
+                        $.each(response, function(timeKey, timeValue){
                             datesArray.push(timeValue.times);
                             $('<option/>').val(timeValue.times).html(timeValue.times).appendTo('#times');
 
@@ -143,18 +133,15 @@ $(document).ready(function(){
 
                             $.ajax({
                                 type: "GET",
-                                url: "curlScripts/booking/bookingCalender.php?",
-                                data: {
-                                    bookingDate: dates,
-                                    //bookingTime: value,
-                                    action: 'findByBookingDate'
-                                },
+								dataType: "json",
+                                url: link + "/booking/findAllByBookingDate?",
+                                data: "bookingDate="+dates,
                                 async: true,
                                 success: function (data) {
                                     //console.log(JSON.parse(data.id));
                                     var arrayToholdFromServer = [];
 
-                                    $.each(JSON.parse(data), function(key, values){
+                                    $.each(data, function(key, values){
                                         arrayToholdFromServer.push(values);
 
                                     });
@@ -164,7 +151,7 @@ $(document).ready(function(){
                             });
                     },
                     error: function(xhr){
-                        alert("Error happend");
+                        alert("Cannot find all bookings by date");
                     }
                 });
                 function displayTable(arrayDetails,arrayTime)
@@ -198,30 +185,24 @@ $(document).ready(function(){
                 dateFormat:  'd_MM_y'
             });
     }); //end of the date function to get the bookings for the day
-    
+
     $("#times").on('change',function()
     {
        var bookingTimeSelected = $("#times").val() ;
-
+	    var bookingDates = $("#datepicker").val() ;
         $.ajax({
             type: "GET",
-            //dataType: "json",
-            url: "curlScripts/booking/bookingCalender.php?",
-            data:{
-                bookingDate:$("#datepicker").val() ,
-                bookingTime: bookingTimeSelected,
-                action: 'findByBookingDateAndTime'
-                
-            },
+            dataType: "json",
+            url: link + "/booking/findByBookingDateAndTime?",
+            data:"bookingDate=" + bookingDates + "&bookingTime="+ bookingTimeSelected,
             async: true,
             success: function (response) {
-
                 if(response == ''){
                     alert('empty');
                 }
                 else
                 {
-                    $.each(JSON.parse(response),function (key,value){
+                    $.each(response,function (key,value){
                         if(value == bookingTimeSelected)
                         {
                             $("#errorTimes").text("Booking time already taken.").show();
@@ -233,12 +214,10 @@ $(document).ready(function(){
                         }
                     });
                 }
-
-
             },
-            error: function(xhr){
-                alert("Error happend");
-    }
+				error: function(xhr){
+					//alert("Error happend");
+			}
         });
 
     });
@@ -248,15 +227,13 @@ $(document).ready(function(){
         var timesForAbooking = [];
         $.ajax({
             type: "GET",
-            //dataType: "json",
-            url: "curlScripts/booking/bookingCalender.php?",
-            data: {
-                bookingDate: $("#datepicker").val(),
-                action:'findByBookingDate'
-            },
+            dataType: "json",
+            url: link + "/booking/findAllByBookingDate?",
+            data: "bookingDate=" + $("#datepicker").val(),
+
             async: false,
             success: function (response) {
-                $.each(JSON.parse(response), function(key, value){
+                $.each(response, function(key, value){
                     timesForAbooking.push(value.bookingTime);
                     verifyTime(value.bookingTime);
                 });
@@ -271,16 +248,13 @@ $(document).ready(function(){
 
             $.ajax({
                 type: "GET",
-                url: 'curlScripts/booking/bookingCalender.php?',
-                data: {
-                    action: 'times'
-                },
+                url: link + '/studioTimes/findAll?',
                 async: true,
                 success: function (response) {
                     $("#table tbody").empty();
                     var timesArray = [];
 
-                    $.each(JSON.parse(response), function (timeKey, timeValue) {
+                    $.each(response, function (timeKey, timeValue) {
                         timesArray.push(timeValue.times);
 
                     });
@@ -323,9 +297,6 @@ $(document).ready(function(){
             });
         }
     });
-});//closing the main document script
-
-
 
 function validateRecordingTime(times)
 {
@@ -429,7 +400,7 @@ function validateRCSDates(rcsDates){
         });
         return false;
     }
-    else if (/[^0-9TBCtbc,]/.test(rcsDates)) {
+    else if (/[^0-9TBCtbc, ]/.test(rcsDates)) {
         $("#errorDatesForRCS").text("Only numeric characters, comma(,) and TBC or tbc allowed in the field.").show();
         //++errorInput;
 
@@ -446,22 +417,21 @@ function validateRCSDates(rcsDates){
 }
 
 
-function validateContinue() {
-    var bookingTime = validateRecordingTime($("#times").val());
+$('#book').click(function(){
+
+	var bookingTime = validateRecordingTime($("#times").val());
     var bookingLength = validateLength($("#txtLength").val());
     var bookingTechnical = validateTechnical($("#items").val());
     var bookingDate = validateBookingDate($("#datepicker").val());
     var additionalInfo = validateAdditionalInfo($("#txtAdditionalInformationForTechnical").val());
     var rcsDates = validateRCSDates($("#txtDatesForRCS").val());
-    console.log(sessionStorage.getItem("contributorSelected"));
-    console.log(sessionStorage.getItem("programSelected"));
 
     if (bookingTime == false || bookingLength == false || bookingTechnical == false || bookingDate == false || rcsDates == false || additionalInfo == false) {
         event.preventDefault();
 
     }
     else {
-        
+        var data = "user="+sessionStorage.getItem("username")+"&bookingDate=" +bookingDate+ "&bookingTime=" + bookingTime + "&technical=" +bookingTechnical + "&additionalInfo=" + additionalInfo + "&rcsDates=" + rcsDates;
         sessionStorage.setItem("bookingTime", bookingTime);
         sessionStorage.setItem("Technical", bookingTechnical);
         sessionStorage.setItem("bookingLength", bookingLength);
@@ -470,45 +440,35 @@ function validateContinue() {
         sessionStorage.setItem("AdditionalInfo", additionalInfo);
             if(bookingLength == '30 Mins')
             {
+				var data = "user="+sessionStorage.getItem("username")+"&bookingDate=" +bookingDate+ "&bookingTime=" + bookingTime + "&technical=" +bookingTechnical + "&additionalInfo=" + additionalInfo + "&rcsDates=" + rcsDates;
 
                 $.ajax({
                     type: "GET",
-                    //dataType: "json",
-                    url: 'curlScripts/booking/bookingCalender.php?',
-                    data: {
-                        bookingTime: bookingTime,
-                        bookingTechnical: bookingTechnical,
-                        bookingDate: bookingDate,
-                        additionalInfo: additionalInfo,
-                        programId : sessionStorage.getItem("programSelected"),
-                        contributorId: sessionStorage.getItem("contributorSelected"),
-                        rcsDates: rcsDates,
-                        user: sessionStorage.getItem("username"),
-                        action:'addBooking'
-                    },
+                    dataType: "json",
+                    url: link + '/booking/'+sessionStorage.getItem("programSelected")+'/'+sessionStorage.getItem("contributorSelected")+'/addBooking?',
+                    data: data,
                     async: true,
                     success: function (response) {
-                        //productionSheetPrint();
-                        console.log(JSON.parse(response));
-
+                        productionSheetPrint();
+						event.preventDefault();
                     }
                 });
             }
             else
             {
+
                 //insert the first transaction
                 $.ajax({
                     type: "GET",
-                    url: 'curlScripts/booking/bookingCalender.php?',
-                    data: {
-                        action: 'times'
-                    },
+					          dataType: "json",
+                    url: link + '/studioTimes/findAll?',
                     async: true,
                     success: function (response) {
+
                         $("#table tbody").empty();
                         var timesArray = [];
 
-                        $.each(JSON.parse(response), function (timeKey, timeValue) {
+                        $.each(response, function (timeKey, timeValue) {
                             timesArray.push(timeValue.times);
                         });
 
@@ -516,29 +476,19 @@ function validateContinue() {
 
                         for(var i=0; i<bookingLength; i++)
                         {
-
+							var data = "user="+sessionStorage.getItem("username")+"&bookingDate=" +bookingDate+ "&bookingTime=" + bookingTime + "&technical=" +bookingTechnical + "&additionalInfo=" + additionalInfo + "&rcsDates=" + rcsDates;
+              console.log(data);
                             var startTime = bookingTime;
                             var next = timesArray[($.inArray(startTime, timesArray) + 1) % timesArray.length];
                             $.ajax({
                                 type: "GET",
-                                //dataType: "json",
-                                url: 'curlScripts/booking/bookingCalender.php?',
-                                data: {
-                                    bookingTime: next,
-                                    bookingTechnical: bookingTechnical,
-                                    bookingDate: bookingDate,
-                                    additionalInfo: additionalInfo,
-                                    programId : sessionStorage.getItem("programSelected"),
-                                    contributorId: sessionStorage.getItem("contributorSelected"),
-                                    rcsDates: rcsDates,
-                                    user: sessionStorage.getItem("username"),
-                                    action:'addBooking'
-                                },
+                                dataType: "json",
+								url: link + '/booking/'+sessionStorage.getItem("programSelected")+'/'+sessionStorage.getItem("contributorSelected")+'/addBooking?',
+								data: "user="+sessionStorage.getItem("username")+"&bookingDate=" +bookingDate+ "&bookingTime=" + bookingTime + "&technical=" +bookingTechnical + "&additionalInfo=" + additionalInfo + "&rcsDates=" + rcsDates,
                                 async: true,
                                 success: function (response) {
 
                                     productionSheetPrint();
-                                    console.log(JSON.parse(response));
 
                                 }
                             });
@@ -558,69 +508,27 @@ function validateContinue() {
                     }
 
                 });
+				event.preventDefault();
             }
             event.preventDefault();
     }
 
     $.ajax({
         type: "GET",
-        url: 'curlScripts/booking/bookingCalender.php?',
-        data: {
-            action: 'times'
-        },
+        url: link + '/studioTimes/findAll?',
         async: true,
         success: function (response) {
             $("#table tbody").empty();
             var timesArray = [];
 
-            $.each(JSON.parse(response), function (timeKey, timeValue) {
+            $.each(response, function (timeKey, timeValue) {
                 timesArray.push(timeValue.times);
             });
         }
     });
-    }
+
+});
     function productionSheetPrint() {
         location.href = "productionSheet.php";
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+});//closing the main document script

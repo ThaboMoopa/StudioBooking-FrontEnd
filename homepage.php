@@ -17,7 +17,7 @@ include("templates/inc_header.html");
             <li class="list-group-item">
 
                 <h1>Welcome</h1>
-
+                <hr />
                 <div class="form-group row">
 
                     <!--suppress XmlInvalidId -->
@@ -44,7 +44,7 @@ include("templates/inc_header.html");
                     </div>
                     <div class="col-sm-5">
 
-                        <a href="guests.php" class="btn btn-outline-warning btn-lg btn-block" id="guests">Guests</a>
+                        <a href="Organisation.php" class="btn btn-outline-warning btn-lg btn-block" id="guests">Organisations</a>
 
                     </div>
 

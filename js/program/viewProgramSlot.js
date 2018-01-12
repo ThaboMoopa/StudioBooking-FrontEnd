@@ -2,18 +2,16 @@
  * Created by thabomoopa on 2017/11/20.
  */
 $(document).ready(function(){
-var URLlink = "http://localhost:8080";
+  //var link = 'http://10.0.0.159:8080';
+  var link = 'http://localhost:8080';
     $.ajax({
         type: "GET",
-        //dataType: "json",
-        url: 'curlScripts/programSlot/programSlot.php?',
-        data: {
-            action: 'findAll'
-        },
+        dataType: "json",
+        url: link + '/programSlot/findAll?',
         async: true,
         success: function (response) {
 
-            $.each(JSON.parse(response), function(key, value){
+            $.each(response, function(key, value){
                 var htmlData = '';
                 htmlData += '<tr>';
                 htmlData += '<td>' + value.name + '</td>';
@@ -22,6 +20,15 @@ var URLlink = "http://localhost:8080";
                 htmlData += '</tr>';
                 $("#table tbody").append(htmlData);
             });
+
+            //function to make sure the edit href above are triggered
+            $("a#edit").click(function(){
+                var edit_button = $(this).data('value');
+
+                //load id into session variable
+                sessionStorage.setItem("programId", edit_button);
+            });
+
         },
         error: function(xhr){
             alert("Error happend");

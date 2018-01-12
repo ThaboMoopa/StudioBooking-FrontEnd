@@ -2,17 +2,16 @@
  * Created by thabomoopa on 2017/12/08.
  */
 $(document).ready(function(){
+  var link = 'http://localhost:8080';
     $.ajax({
         type: "GET",
-        //dataType: "json",
-        url: "curlScripts/user/user.php?",
-        data: {
-            action: 'findAll'
-        },
+        dataType: "json",
+        url: link + "/user/findAll?",
+        //url: "http://10.0.0.159:8080/user/findAll?",
         async: true,
         success: function (response) {
             var htmlData = '';
-            $.each(JSON.parse(response), function(key, value){
+            $.each(response, function(key, value){
                 htmlData += '<tr>';
                 htmlData += '<td>' + value.name+ '</td>';
                 htmlData += '<td>' + value.email + '</td>';

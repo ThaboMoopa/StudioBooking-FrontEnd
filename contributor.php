@@ -18,7 +18,7 @@ include("templates/inc_header.html");
         <li class="list-group-item">
 
             <h1>Contributors</h1>
-            <hr>
+            <hr />
             <div class="form-group">
                 <!--suppress XmlInvalidId -->
                 <label for="Name" class="col-sm-7 col-form-label"></label>
@@ -33,7 +33,7 @@ include("templates/inc_header.html");
                 <!--suppress XmlInvalidId -->
                 <table class="table" id="table">
                     <thead>
-                    <tr>
+                    <tr style="background-color:#FAF0E6;">
                         <th>Name</th><th>Surname</th><th>Email</th><th>Organisation</th><th>Position</th><th>Contact</th><th>Additional Contact</th><th>Action</th>
                     </tr>
                     <thead>

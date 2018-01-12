@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by IntelliJ IDEA.
+ * Created by IntelliJIDEA.
  * User: thabomoopa
  * Date: 2017/11/16
  * Time: 5:56 PM
@@ -14,7 +14,7 @@ include('templates/inc_login.html');
     <ul class="list-group">
         <li class="list-group-item">
             <h1>Login</h1>
-
+            <hr />
                 <!-- Username input textfield -->
                 <div class="form-group row">
                     <!--suppress XmlInvalidId -->

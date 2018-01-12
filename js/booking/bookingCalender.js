@@ -3,6 +3,9 @@
  */
 $(document).ready(function(){
 
+
+	//var link = 'http://10.0.0.159:8080';
+	var link = 'http://localhost:8080';
     $( function() {
         $( "#datepicker" ).datepicker({
             onSelect: function(date) {
@@ -10,34 +13,27 @@ $(document).ready(function(){
                 //sessionStorage.setItem("selectedDate",dates);
                 $.ajax({
                     type: "GET",
-                    url: "curlScripts/booking/bookingCalender.php?",
-                    data: {
-                        action: 'times'
-                    },
+                    url: link + "/studioTimes/findAll?",
                     async: true,
                     success: function (response) {
-                        console.log(JSON.parse(response));
+                        console.log(response);
                         var timesArrayDay = [];
                         //var timesCurl = JSON.parse(response);
-                        $.each(JSON.parse(response), function (key, value) {
+                        $.each(response, function (key, value) {
                             timesArrayDay.push(value.times);
                         });
 
                         $.ajax({
                             type: "GET",
-                            url: "curlScripts/booking/bookingCalender.php?",
-                            data: {
-                                bookingDate: dates,
-                                //bookingTime: value,
-                                action: 'findByBookingDate'
-                            },
+                            url: link + "/booking/findAllByBookingDate?",
+                            data: "bookingDate=" + dates,
                             async: true,
                             success: function (data) {
                                 //console.log(JSON.parse(data.id));
                                 var arrayToholdFromServer = [];
                                 //htmlData += '<td>' + JSON.parse(data) + '</td>';
 
-                                $.each(JSON.parse(data), function(key, values){
+                                $.each(data, function(key, values){
                                     arrayToholdFromServer.push(values);
                                 });
                                 //console.log(arrayToholdFromServer);
@@ -79,7 +75,11 @@ $(document).ready(function(){
                             }
                         });
                         htmlData += '</tr>';
+													$("tr:first").css("background-color", "#FAF0E6");
+
                     });
+
+
 
                     $("#table tbody").append(htmlData);
                 }
@@ -89,11 +89,8 @@ $(document).ready(function(){
                     $.ajax({
                         type: "GET",
                         //dataType: "json",
-                        url: "curlScripts/booking/bookingCalender.php?",
-                        data: {
-                            bookingId: id,
-                            action: 'deleteBooking'
-                        },
+                        url: link + "/booking/deleteBooking?",
+                        data: "id=" +id,
                         async: true,
                         success: function (data) {
                             location.href="bookingCalender.php";
@@ -107,33 +104,31 @@ $(document).ready(function(){
                     var position = [];
                     $.ajax({
                         type: "GET",
-                        //dataType: "json",
-                        url: "curlScripts/booking/bookingCalender.php?",
-                        data: {
-                            bookingId: id,
-                            action: 'readBooking'
-                        },
+                        dataType: "json",
+                        url: link + "/booking/readBooking?",
+                        data: "id=" + id,
                         async: true,
                         success: function (data) {
-                            var results = data.split("|");
-                            
-                            organisationName.push(results[0]);
-                            organisationName.push(results[1]);
-                            organisationName.push(results[2]);
-                            organisationName.push(results[3]);
-                            organisationName.push(results[4]);
-                            organisationName.push(results[5]);
-                            organisationName.push(results[6]);
-                            organisationName.push(results[7]);
-                            organisationName.push(results[8]);
-                            organisationName.push(results[9]);
-                            organisationName.push(results[10]);
-                            organisationName.push(results[11]);
-                            organisationName.push(results[12]);
-                            organisationName.push(results[13]);
-                            organisationName.push(results[14]);
+                           // var results = data.split("|");
+                            console.log(data);
+                            organisationName.push(data.bookingTime);
+                            organisationName.push(data.bookingDate);
+                            organisationName.push(data.programSlot.name);
+                            organisationName.push(data.programSlot.time);
+                            organisationName.push(data.contributor.name);
+														organisationName.push(data.contributor.surname);
+                            organisationName.push(data.rcsDates);
+                            organisationName.push(data.contributor.organisation.organisationName);
+                            organisationName.push(data.contributor.position);
+                            organisationName.push(data.contributor.contact);
+                            organisationName.push(data.contributor.additionalContact);
+                            organisationName.push(data.contributor.email);
+                            organisationName.push(data.user);
+                            organisationName.push(data.technical);
+                            organisationName.push(data.additionalInfo);
+                          //  organisationName.push(results[14]);
                             //organisationName.push(results[15]);
-                            
+
                             printProduction(organisationName);
                         }
                     });
@@ -153,15 +148,15 @@ $(document).ready(function(){
                                                 width: 90},
                                                 {text:'Tel: (021) 917 7000 Fax: (021 914 1351)\n2nd Floor Santyger Building, Willie van Schoor Avenue, Bellville,7535\n\nGPS Co-ordinates\n-33.8739919,18.637452800000005',colSpan:3},{},{}],
                                             [{text: 'Production Sheet',colSpan:4,alignment: 'center'},{},{},{}],
-                                            [{text: 'Date of pre-recording'}, {text: print[4]}, {text: 'Time of pre-recording'}, {text: print[3]}],
-                                            [{text: 'Title of file on RCS '}, {text: print[5], colSpan: 3}, {}, {}],
-                                            [{text: 'Time of slot'}, {text: print[6]}, {text: 'Broadcasting date '}, {text: print[7]}],
-                                            [{text: 'Interviewee /-s'}, {text: print[13]}, {text: 'Surname'}, {text: print[8]}],
-                                            [{text: 'Organisation'}, {text: print[0]},{text: 'Position'}, {text: print[14]}],
-                                            [{text: 'Contact Details'}, {text: print[1]}, {text: 'Alternative Contact'}, {text: print[2]}],
-                                            [{text: 'E-Mail'}, {text: print[9], colSpan: 3}, {}, {}],
-                                            [{text: 'Interviewer'}, {text: print[10], colSpan: 3}, {}, {}],
-                                            [{text: 'Technical'}, {text: print[11], colSpan: 3}, {}, {}],
+                                            [{text: 'Date of pre-recording'}, {text: print[1]}, {text: 'Time of pre-recording'}, {text: print[0]}],
+                                            [{text: 'Title of file on RCS '}, {text: print[2], colSpan: 3}, {}, {}],
+                                            [{text: 'Time of slot'}, {text: print[3]}, {text: 'Broadcasting date '}, {text: print[6]}],
+                                            [{text: 'Interviewee /-s'}, {text: print[4]}, {text: 'Surname'}, {text: print[5]}],
+                                            [{text: 'Organisation'}, {text: print[7]},{text: 'Position'}, {text: print[8]}],
+                                            [{text: 'Contact Details'}, {text: print[9]}, {text: 'Alternative Contact'}, {text: print[10]}],
+                                            [{text: 'E-Mail'}, {text: print[11], colSpan: 3}, {}, {}],
+                                            [{text: 'Interviewer'}, {text: print[12], colSpan: 3}, {}, {}],
+                                            [{text: 'Technical'}, {text: print[13], colSpan: 3}, {}, {}],
                                             [{text: 'Additional Information'}, {
                                                 text: print[12],
                                                 colSpan: 3

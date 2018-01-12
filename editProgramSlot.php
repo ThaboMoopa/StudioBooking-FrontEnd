@@ -2,32 +2,27 @@
 /**
  * Created by IntelliJ IDEA.
  * User: thabomoopa
- * Date: 2017/11/20
- * Time: 5:09 PM
+ * Date: 2017/11/19
+ * Time: 3:28 PM
  */
 include("templates/inc_header.html");
 ?>
     <script src="js/index/homepage.js"></script>
-
+    <script src="js/program/editProgramSlot.js"></script>
     <div id="username"></div>
-
     <ul class="list-group">
-
         <li class="list-group-item">
-
-            <h1>Edit Programs slot</h1>
-            <?php include("templates/contributor/inc_programSlot.html"); ?>
-
+            <h1>Edit Program slot</h1>
+            <?php include('templates/programSlot/inc_programSlot.html'); ?>
             <div class="form-group">
                 <div class="col-sm-7">
-                    <button id="AddProgramSlot" name="AddProgramSlot" class="btn btn-outline-success" value="AddProgramSlot">Edit Program Slot</button>
+                    <button id="EditProgram" name="EditProgram" class="btn btn-outline-success">Edit Program slot</button>
                 </div>
             </div>
-            </form>
         </li>
     </ul>
-    <br />
-    <br />
-    <br />
+<br>
+<br>
+<br>
     <div class="modal"><!-- Place at bottom of page --></div>
 <?php  include("templates/inc_footer.html"); ?>

@@ -17,7 +17,7 @@ include("templates/inc_header.html");
         <li class="list-group-item">
 
             <h1>Adding a Booking</h1>
-
+            <hr />
             <h5>Select program slot</h5>
 
             <form>

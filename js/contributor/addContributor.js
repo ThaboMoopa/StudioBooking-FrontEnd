@@ -2,24 +2,23 @@
  * Created by thabomoopa on 2017/11/17.
  */
 $(document).ready(function(){
-
+	//var link = 'http://10.0.0.159:8080';
+	var link = 'http://localhost:8080';
     $("#txtOrganisation").on('keydown focus',function(event){
 
         $.ajax({
             type: "GET",
-            //dataType: "json",
-            url: "curlScripts/contributor/contributor.php",
-            data: {
-                action: 'findAll'
-            },
+            dataType: "json",
+            url: link + "/organisation/findAll?",
             async: true,
             success: function (response) {
+
                 var availableTags = [];
-                var results = response.split("|");
-                //console.log(results);
-                $.each(results, function(key, value)
+
+                $.each(response, function(key, value)
                 {
-                    availableTags.push(value);
+					console.log(value.organisationName);
+                    availableTags.push(value.organisationName);
                 });
                 populateOrganisation(availableTags);
 
@@ -106,16 +105,14 @@ function validateEmail(email) {
     $.ajax({
         type: "GET",
         //dataType: "text",
-        url: "curlScripts/contributor/contributor.php",
-        data: {
-            email: email,
-            action: 'findByEmail'
-        },
+        url: link + "/contributor/findByEmail?",
+        data: "email=" + email,
         async: false,
         success: function(response)
         {
-            var results = response.split("|");
-            matchingEmails = results[0];
+			alert(response.email);
+           // var results = response.split("|");
+            matchingEmails = response.email;
         }
 
     });
@@ -188,8 +185,21 @@ function validateContact(contact) {
         //prevent the form from being submitted if there is an error
         event.preventDefault();
     }
-    else if (contact.length > 10 || contact.length < 10) {
-        $("#errorContact").text("Numbers cannot be more than Ten (10) characters long.").show();
+    else if (contact.length > 10 ) {
+        $("#errorContact").text("Contact number cannot be more than Ten (10) characters long.").show();
+        //++errorInput;
+
+        //fade out the error text when the user clicks on the textbox
+        $("#txtContact").on('focus',function(event) {
+            $("#errorContact").fadeOut('slow');
+        });
+        return false;
+
+        //prevent the form from being submitted if there is an error
+        event.preventDefault();
+    }
+		else if ( contact.length < 10) {
+        $("#errorContact").text("Contact number cannot be less than Ten (10) characters long.").show();
         //++errorInput;
 
         //fade out the error text when the user clicks on the textbox
@@ -232,7 +242,7 @@ function validateAdditional(additional) {
         event.preventDefault();
     }
     else if (additional.length  > 10 ) {
-        $("#errorAdditionalContact").text("Numbers cannot be less than Ten (10) characters long.").show();
+        $("#errorAdditionalContact").text("Contact numbers cannot be more than Ten (10) characters long.").show();
         //++errorInput;
 
         //fade out the error text when the user clicks on the textbox
@@ -245,7 +255,7 @@ function validateAdditional(additional) {
         event.preventDefault();
     }
     else if (additional.length  < 10) {
-        $("#errorAdditionalContact").text("Numbers cannot be more than Ten (10) characters long.").show();
+        $("#errorAdditionalContact").text("Contact numbers cannot be less than Ten (10) characters long.").show();
         //++errorInput;
 
         //fade out the error text when the user clicks on the textbox
@@ -267,16 +277,13 @@ function validateOrganisation(organisation) {
         //var search = "name="+organisation;
         $.ajax({
             type: "GET",
-            //dataType: "json",
-            url: "curlScripts/organisation/organisation.php?",
-            data: {
-                search: organisation,
-                action: 'findByName'
-            },
+            dataType: "json",
+            url: link + "/organisation/findByName?",
+            data: "name=" + organisation,
             async: true,
             success: function (response) {
-                var results = response.split("|");
-                validateName(organisation, results[0])
+                //var results = response.split("|");
+                validateName(organisation, response.organisationName)
             }
 
         });
@@ -312,7 +319,7 @@ function validateOrganisation(organisation) {
         event.preventDefault();
         return false;
     }
-    else if (/[^a-zA-Z0-9-!@#% ]/.test(organisation)) {
+    else if (/[^A-Za-z0-9-!@#%' ]/.test(organisation)) {
         $("#errorOrganisation").text("Characters allowed in this field are NUMBERS, LETTERS, !, -, @, #, %.").show();
         //++errorInput;
 
@@ -364,7 +371,6 @@ function validatePosition(position) {
 }
 
     $("#AddContributor").click(function(event){
-
     var name = validateName($.trim($("#txtName").val()));
     var surname = validateSurname($.trim($("#txtSurname").val()));
     var email = validateEmail($.trim($("#txtEmail").val()));
@@ -382,29 +388,17 @@ function validatePosition(position) {
 
         $.ajax({
             type: "GET",
-            //dataType: "json",
-            url: "curlScripts/organisation/organisation.php?",
-            data: {
-                search: organisation,
-                action: 'findByName'
-            },
+            dataType: "json",
+            url: link + "/organisation/findByName?",
+            data: "name=" + organisation,
             async: true,
             success: function (response) {
-                var results = response.split("|");
+                //var results = response.split("|");
                 $.ajax({
                     type: "GET",
-                    //dataType: "json",
-                    url: "curlScripts/contributor/contributor.php?",
-                    data: {
-                        name: name,
-                        surname: surname,
-                        email: email,
-                        position: position,
-                       contact: contact,
-                       additionalContact: additionalContact,
-                       organisation: results[1],
-                        action: 'addContributor'
-                    },
+                    dataType: "json",
+                    url: link + "/contributor/"+response.id+"/addContributor?",
+                    data: "name="+name+"&surname="+surname+"&email="+email+"&position="+position+"&contact="+contact+"&additionalContact="+additionalContact,
                     async: true,
                     success: function (response) {
                         location.href="contributor.php";

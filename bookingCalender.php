@@ -26,7 +26,7 @@ include("templates/inc_header.html");
             <div class="form-group row">
                 <table class="table" id="table">
                     <thead>
-                    <tr>
+                    <tr style="background-color:#FAF0E6;">
                         <th>Time</th><th>Program Organiser</th><th>Name of Contributor</th><th>Program</th><th>Technical</th><th>Additional Information</th><th>Action</th>
                     </tr>
                     <thead>

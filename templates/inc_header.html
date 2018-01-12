@@ -7,6 +7,8 @@
  <script src="js/additional/jquery-1.12.4.js"></script>-->
  <script src="js/additional/popper.min.js"></script>
   <link rel="stylesheet" href="css/navigation.css">
+  <link rel="SHORTCUT ICON"
+         href="/images/logo.png">
 
 
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -17,8 +19,6 @@
     <script src="js/additional/vfs_fonts.js"></script>
     <script src="js/index/access.js"></script>
     <script src="js/additional/loading.js"></script>
-
-
     <style>
         .table{
             font-size: small;
@@ -70,10 +70,7 @@
             body.loading .modal {
                 display: block;
             }
-
     </style>
-
-
 </head>
 <body>
 
@@ -106,15 +103,17 @@
                 </div>
             </div>
             &nbsp;
-          <div class="dropdown">
-            <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Contributors
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-              <button class="dropdown-item" type="button" id="carLink" onclick="addContributors()">Add Contributor</button>
-              <button class="dropdown-item" type="button" id="viewAllCarsLink" onclick="viewContributors()">View Contributors</button>
-            </div>
-          </div>
+            <li class="nav-item">
+                <div class="dropdown">
+                    <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Organisations
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu6">
+                        <button class="dropdown-item" type="button" id="addOrganisation" onclick="addOrganisation()">Add Organisation</button>
+                        <button class="dropdown-item" type="button" id="viewOrganisation" onclick="viewOrganisation()">View Organisation</button>
+                    </div>
+                </div>
+            </li>
           &nbsp;
           <li class="nav-item">
             <div class="dropdown">
@@ -139,7 +138,7 @@
              </div>
              </div>
              </li>
-             &nbsp;
+             <!-- &nbsp;
             <li class="nav-item">
                 <div class="dropdown">
                     <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -150,21 +149,18 @@
                         <button class="dropdown-item" type="button" id="viewGuest" onclick="viewGuests()">View Program Slot</button>
                     </div>
                 </div>
-            </li>
+            </li> -->
             &nbsp;
-            <li class="nav-item">
-                <div class="dropdown">
-                    <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Organisations
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenu6">
-                        <button class="dropdown-item" type="button" id="addOrganisation" onclick="addOrganisation()">Add Organisation</button>
-                        <button class="dropdown-item" type="button" id="viewOrganisation" onclick="viewOrganisation()">View Organisation</button>
-                    </div>
-                </div>
-            </li>
+            <div class="dropdown">
+              <button class="btn btn-secondary btn-lg btn-block dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Contributors
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <button class="dropdown-item" type="button" id="carLink" onclick="addContributors()">Add Contributor</button>
+                <button class="dropdown-item" type="button" id="viewAllCarsLink" onclick="viewContributors()">View Contributors</button>
+              </div>
+            </div>
             &nbsp;
-
         </ul>
       </div>
     </nav>

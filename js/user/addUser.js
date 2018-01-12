@@ -2,6 +2,33 @@
  * Created by thabomoopa on 08/12/2017.
  */
 $(document).ready(function(){
+    var link = 'http://localhost:8080';
+    $("#txtEmail").on('keydown', function(){
+      console.log('im in');
+      $.ajax({
+          type: "GET",
+          dataType: "json",
+          url: link + "/user/findByEmail?",
+          data: "email="+$('#txtEmail').val() ,
+          async: false,
+          success: function(response)
+          {
+            $.each(response, function(key, value){
+              if(value.email == $('#txtEmail').val()){
+                $("#errorEmail").text("The email address already exists, try again please.").show();
+
+                //fade out the error text when the user clicks on the textbox
+                $("#txtEmail").on('focus',function(event) {
+                    $("#errorEmail").fadeOut('slow');
+              });
+              }
+            });
+          }
+
+      });
+    });
+
+
     function validateName(name) {
         if (name === "") {
             $("#errorName").text("Please enter a name.").show();
@@ -34,34 +61,33 @@ $(document).ready(function(){
     function validateEmail(email) {
 
         var matchingEmails = "";
-        //
-
         $.ajax({
             type: "GET",
-            //dataType: "text",
-            url: "curlScripts/contributor/contributor.php",
-            data: {
-                email: email,
-                action: 'findByEmail'
-            },
+            dataType: "json",
+            url: link + "/user/findByEmail?",
+            data: "email="+$('#txtEmail').val() ,
             async: false,
             success: function(response)
             {
-                var results = response.split("|");
-                matchingEmails = results[0];
+              $.each(response, function(key, value){
+                matchingEmails == value.email;
+              });
             }
 
         });
 
-        if(matchingEmails == "Exists")
+        if(matchingEmails == email)
         {
-            $("#errorEmail").html("The email address already exists, please try again");
-            $("#txtEmail").on('focus',function(event){
+            $("#errorEmail").text("The email address already exists, try again please.").show();
+
+            //fade out the error text when the user clicks on the textbox
+            $("#txtEmail").on('focus',function(event) {
                 $("#errorEmail").fadeOut('slow');
-            });
-            event.preventDefault();
-            return false;
-        }
+          });
+          event.preventDefault();
+          return false;
+          }
+
         else if (email === "") {
             $("#errorEmail").text("Please enter a email address.").show();
 
@@ -163,29 +189,25 @@ $(document).ready(function(){
     }
 
     $('#AddUser').on('click', function() {
+
         var name = validateName($.trim($('#txtName').val()));
         var password = validatePassword($.trim($('#txtPassword').val()))
         var email = validateEmail($.trim($('#txtEmail').val()));
         var confirm = validateConfirm($.trim($('#txtConfirmPassword').val()));
-
+        var data = "email=" + email + "&password="+password+"&name="+name;
         if (name == false || password == false || email == false || confirm == false) {
             event.preventDefault();
         }
         else {
             if (password == confirm) {
-                console.log('im in');
                 $.ajax({
                     type: "GET",
-                    //dataType: "json",
-                    url: "curlScripts/user/user.php?",
-                    data: {
-                        email: email,
-                        password: password,
-                        name: name,
-                        action: 'addUser'
-                    },
+                    dataType: "json",
+                    url: link + "/user/addUser?",
+                    data: data,
                     async: true,
                     success: function (response) {
+                      alert(response);
                         location.href = 'user.php';
                     }
                 });

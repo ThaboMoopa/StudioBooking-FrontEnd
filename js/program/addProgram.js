@@ -2,34 +2,31 @@
  * Created by thabomoopa on 2017/11/19.
  */
 $(document).ready(function(){
-
+  //var link = 'http://10.0.0.159:8080';
+  var link = 'http://localhost:8080';
             $('#programSlot').on('keydown focus', function(event){
                 var search = $('#programSlot').val();
                 search = search.replace(/ /g, "_").toLowerCase();
 
                 $.ajax({
                     type: "GET",
-                    //dataType: "json",
-                    url: 'curlScripts/programSlot/programSlot.php?',
-                    data: {
-                        search: search,
-                        action: 'findByName'
-                    },
+                    dataType: "json",
+                    url: link + '/programSlot/findByName?',
+                    data: "search=" + search,
                     async: true,
                     success: function (response) {
-                        var results = JSON.parse(response);
+                        //var results = response;
                         var substrSearch = search.substr(0, 3);
 
-                         $.each(results, function(key, value)
+                         $.each(response, function(key, value)
                          {
                              var searchResults = value.name;
-                             console.log(value.name);
                              var substrSearchResults = searchResults.substr(0, 3);
                              if(substrSearch == substrSearchResults)
                              {
                                  $("#errorProgramSlot").text("Program already exists. Try another program before you continue!");
                                  //fade out the error text when the user clicks on the textbox
-                                 $("#programSlot").on('click',function(event) {
+                                 $("#programSlot").on('click focus',function(event) {
                                      $("#errorProgramSlot").fadeOut('slow');
                                      validateName();
                                  });
@@ -43,19 +40,14 @@ $(document).ready(function(){
                 var time = $('#txtTime').val();
                 $.ajax({
                     type: "GET",
-                    //dataType: "json",
-                    url: 'curlScripts/programSlot/programSlot.php?',
-                    data: {
-                        time: time,
-                        action: 'findByTime'
-                    },
+                    dataType: "json",
+                    url: link + '/programSlot/findByTime?',
+                    data: "time="+time,
                     async: true,
                     success: function (data) {
-                        var result = JSON.parse(data);
-                        console.log(result);
                         //ajaxResponse = response;
 
-                        $.each(result, function(key, value){
+                        $.each(data, function(key, value){
                             //console.log(time == value.time);
                             if (time == value.time) {
                                 $("#errorTime").text("The time is not available, try another time slot");
@@ -96,7 +88,7 @@ $(document).ready(function(){
                         event.preventDefault();
                         return false;
                     }
-                    else if (/[^a-zA-Z_ ]/.test(name)) {
+                    else if (/[^a-zA-Z_, ]/.test(name)) {
                         $("#errorProgramSlot").text("Only alphabetic characters allowed in the field.").show();
                         //++errorInput;
 
@@ -120,18 +112,18 @@ $(document).ready(function(){
                     //
                     //     }
                     else
-                        return name.toLowerCase();
+                        return name;
         }
 
         function validateTime(time)
         {
 
 
-            var finalTime = /^([01]\d|2[0-3])h?([0-5]\d)$/.test(time);
-            if(validateTime() == false)
-            {
-                return false;
-            }
+            //var finalTime = /^([01]\d|2[0-3])h?([0-5]\d)$/.test(time);
+            //if(validateTime() == false)
+            //{
+            //    return false;
+            //}
             if(time == "")
             {
 
@@ -146,7 +138,7 @@ $(document).ready(function(){
                     event.preventDefault();
                     return false;
             }
-            else if (finalTime == false) {
+            else if (!time.match(/^\d{2,}h\d{2}$/)) {
                 $("#errorTime").text("The time format is 00h00 (Example 12h00)").show();
                 //++errorInput;
 
@@ -172,9 +164,9 @@ $(document).ready(function(){
                 //prevent the form from being submitted if there is an error
                 event.preventDefault();
             }
-            else if(time < "07h00")
+            else if(time < "05h00")
             {
-                $("#errorTime").text("Time slot is not allowed, programs start 07h00.").show();
+                $("#errorTime").text("Time slot is not allowed, programs start 05h00.").show();
                 //++errorInput;
 
                 //fade out the error text when the user clicks on the textbox
@@ -207,8 +199,6 @@ $(document).ready(function(){
 
                     $('#AddProgram').click(function(){
 
-
-
                         var name = validateName($.trim($("#programSlot").val()));
                         var times = validateTime($.trim($("#txtTime").val()));
                         event.preventDefault();
@@ -230,19 +220,14 @@ $(document).ready(function(){
                             event.preventDefault();
                         }
                         else {
-                            alert('im in else');
                             $.ajax({
                                 type: "GET",
-                                //dataType: "json",
-                                url: 'curlScripts/programSlot/programSlot.php?',
-                                data: {
-                                    name: name,
-                                    time: times,
-                                    action: 'addProgramSlot'
-                                },
+                                dataType: "json",
+                                //url: 'http://10.0.0.159:8080/programSlot/addProgramSlot?',
+                                url: link + '/programSlot/addProgramSlot?',
+                                data: "name=" + name + "&time=" + times,
                                 async: true,
                                 success: function (response) {
-                                   // console.log(JSON.parse(response));
                                    location.href = 'programSlot.php';
                                 }
                             });

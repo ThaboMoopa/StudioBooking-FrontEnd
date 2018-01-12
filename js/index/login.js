@@ -2,24 +2,26 @@
  * Created by thabomoopa on 2017/11/16.
  */
 $(document).ready(function(){
-
-
+//var link = 'http://10.0.0.159:8080';
+var link = 'http://localhost:8080';
     //console.log(URLlink);
     function validateEmail(email) {
+		var email = $('#txtEmail').val();
             $.ajax({
                 type: "GET",
-                url: "curlScripts/user/user.php",
-                data: {
-                    email:email,
-                    action: 'findByEmail'
-                },
+                url: link + "user/findByEmail?",
+				        data: 'email=' + email,
+                //data: {
+                  //  email:email,
+                   // action: 'findByEmail'
+                //},
                 async: true,
                 success: function (response) {
-                    console.log(JSON.parse(response));
-                    if(JSON.parse(response).email == email)
-                    {
+			               
+                   if(response.email == email)
+                   {
                         return email;
-                    }
+                   }
                     else{
                         $("#errorEmail").text("Email not found, try another email address.").show();
                         //fade out the error text when the user clicks on the textbox
@@ -103,6 +105,7 @@ $(document).ready(function(){
     $("#login").click(function(){
         var email = validateEmail($("#txtEmail").val());
         var password = validatePassword($("#txtPassword").val());
+		var data = 'email=' + email + '&password=' + password;
         if (email == false || password == false) {
             $('#errorPage').html('<div class="alert alert-danger" role="alert">Login details are incorrect. Please try again!</div>');
             $("#txtEmail").click(function () {
@@ -114,30 +117,30 @@ $(document).ready(function(){
         }
         else {
             $.ajax({
-                type: "GET",
-                url: "curlScripts/user/user.php",
-                data: {
-                    email:email,
-                    password:password,
-                    action: 'login'
-                },
+                 type: "GET",
+                url: link + "/user/login?",
+				data: data,
+                //data: {
+                  //  email:email,
+                   // action: 'findByEmail'
+                //},
                 async: true,
                 success: function (response) {
                     event.preventDefault();
-
-                    if(JSON.parse(response).email == email)
+//console.log(JSON.parse(response).email == email);
+                    if(response.email == email)
                     {
-                        if(JSON.parse(response).password == password)
-                        {
+                        if(response.password == password)
+                       {
                             //sessionStorage.setItem("id",results[2]);
-                            sessionStorage.setItem("username",JSON.parse(response).name);
+                           sessionStorage.setItem("username",response.name);
                             homepage();
                             event.preventDefault();
                         }
                         else
-                        {
+                       {
                             $('#errorPage').html('<div class="alert alert-danger" role="alert">Password is incorrect. Please try again!</div>');
-                            event.preventDefault();
+                           event.preventDefault();
                         }
                     }
                     else

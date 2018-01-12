@@ -2,26 +2,24 @@
  * Created by thabomoopa on 2017/11/17.
  */
 $(document).ready(function(){
-console.log(sessionStorage.getItem('contributorId'));
+	//var link = 'http://10.0.0.159:8080';
+	var link = 'http://localhost:8080';
 $('#txtEmail').prop('readonly',true);
     $.ajax({
         type: "GET",
-        //dataType: "json",
-        url: "curlScripts/contributor/contributor.php",
-        data: {
-            id: sessionStorage.getItem('contributorId'),
-            action: 'readCont'
-        },
+        dataType: "json",
+        url: link + "/contributor/readContributor?",
+        data: "id=" + sessionStorage.getItem("contributorId"),
         async: true,
         success: function (response) {
             //$('#txtName').
-            document.getElementById('txtName').value = JSON.parse(response).name;
-            document.getElementById('txtSurname').value = JSON.parse(response).surname;
-            document.getElementById('txtEmail').value = JSON.parse(response).email;
-            document.getElementById('txtOrganisation').value = JSON.parse(response).organisation.organisationName;
-            document.getElementById('txtPosition').value = JSON.parse(response).position;
-            document.getElementById('txtContact').value = JSON.parse(response).contact;
-            document.getElementById('txtAdditionalContact').value = JSON.parse(response).additionalContact;
+            document.getElementById('txtName').value = response.name;
+            document.getElementById('txtSurname').value = response.surname;
+            document.getElementById('txtEmail').value = response.email;
+            document.getElementById('txtOrganisation').value = response.organisation.organisationName;
+            document.getElementById('txtPosition').value = response.position;
+            document.getElementById('txtContact').value = response.contact;
+            document.getElementById('txtAdditionalContact').value = response.additionalContact;
         },
         error: function(xhr){
             alert("Connection to server unavailable, check your connection to server");
@@ -32,19 +30,15 @@ $('#txtEmail').prop('readonly',true);
     $("#txtOrganisation").on('keydown focus',function(event){
         $.ajax({
             type: "GET",
-            //dataType: "json",
-            url: "curlScripts/contributor/contributor.php",
-            data: {
-                action: 'findAll'
-            },
+            dataType: "json",
+            url: link + "/organisation/findAll?",
             async: true,
             success: function (response) {
                 var availableTags = [];
-                var results = response.split("|");
                 //console.log(results);
-                $.each(results, function(key, value)
+                $.each(response, function(key, value)
                 {
-                    availableTags.push(value);
+                    availableTags.push(value.organisationName);
                 });
                 populateOrganisation(availableTags);
 
@@ -213,8 +207,21 @@ $('#txtEmail').prop('readonly',true);
             //prevent the form from being submitted if there is an error
             event.preventDefault();
         }
-        else if (contact.length > 10 || contact.length < 10) {
+        else if (contact.length > 10 ) {
             $("#errorContact").text("Numbers cannot be more than Ten (10) characters long.").show();
+            //++errorInput;
+
+            //fade out the error text when the user clicks on the textbox
+            $("#txtContact").on('focus',function(event) {
+                $("#errorContact").fadeOut('slow');
+            });
+            return false;
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+        }
+				else if (contact.length < 10) {
+            $("#errorContact").text("Contact numbers cannot be less than Ten (10) characters long.").show();
             //++errorInput;
 
             //fade out the error text when the user clicks on the textbox
@@ -256,8 +263,21 @@ $('#txtEmail').prop('readonly',true);
             //prevent the form from being submitted if there is an error
             event.preventDefault();
         }
-        else if (additional.length  > 10 || additional.length  < 10) {
-            $("#errorAdditionalContact").text("Numbers cannot be more than Ten (10) characters long.").show();
+        else if (additional.length  > 10) {
+            $("#errorAdditionalContact").text("Contact numbers cannot be more than Ten (10) characters long.").show();
+            //++errorInput;
+
+            //fade out the error text when the user clicks on the textbox
+            $("#txtAdditionalContact").on('focus',function(event) {
+                $("#errorAdditionalContact").fadeOut('slow');
+            });
+            return false;
+
+            //prevent the form from being submitted if there is an error
+            event.preventDefault();
+        }
+				else if (additional.length  < 10) {
+            $("#errorAdditionalContact").text("Contact numbers cannot be less than Ten (10) characters long.").show();
             //++errorInput;
 
             //fade out the error text when the user clicks on the textbox
@@ -279,16 +299,13 @@ $('#txtEmail').prop('readonly',true);
         //var search = "name="+organisation;
         $.ajax({
             type: "GET",
-            //dataType: "json",
-            url: "curlScripts/organisation/organisation.php?",
-            data: {
-                search: organisation,
-                action: 'findByName'
-            },
+            dataType: "json",
+            url: link + "/organisation/findByName?",
+            data: "name=" + organisation,
             async: true,
             success: function (response) {
-                var results = response.split("|");
-                validateName(organisation, results[0])
+                //var results = response.split("|");
+                validateName(organisation, response.organisationName)
             }
 
         });
@@ -378,7 +395,6 @@ $('#txtEmail').prop('readonly',true);
     $("#EditContributor").click(function(event){
 
         var id = sessionStorage.getItem('contributorId');
-        console.log(id);
         var name = validateName($.trim($("#txtName").val()));
         var surname = validateSurname($.trim($("#txtSurname").val()));
         var email = validateEmail($.trim($("#txtEmail").val()));
@@ -396,38 +412,25 @@ $('#txtEmail').prop('readonly',true);
 
             $.ajax({
                 type: "GET",
-                //dataType: "json",
-                url: "curlScripts/organisation/organisation.php?",
-                data: {
-                    search: organisation,
-                    action: 'findByName'
-                },
+                dataType: "json",
+                url: link + "/organisation/findByName?",
+				data: "name=" + organisation,
                 async: true,
                 success: function (response) {
-                    var results = response.split("|");
-                    $.ajax({
-                        type: "GET",
-                        //dataType: "json",
-                        url: "curlScripts/contributor/contributor.php?",
-                        data: {
-                            id: id,
-                            name: name,
-                            surname: surname,
-                            email: email,
-                            position: position,
-                            contact: contact,
-                            additionalContact: additionalContact,
-                            organisation: results[1],
-                            action: 'editContributor'
-                        },
-                        async: true,
-                        success: function (response) {
-                            location.href="contributor.php";
-                        },
-                        error: function(xhr){
-                            alert("Adding Contributor Failed");
-                        }
-                    });
+                    //var results = response.split("|");
+                $.ajax({
+                    type: "GET",
+                    dataType: "text",
+                    url: link + "/contributor/"+response.id+"/updateContributor?",
+                    data: "id="+id+"&name="+name+"&surname="+surname+"&email="+email+"&position="+position+"&contact="+contact+"&additionalContact="+additionalContact,
+                    async: true,
+                    success: function (response) {
+                        location.href="contributor.php";
+                    },
+                    error: function(xhr){
+                        alert("Adding Contributor Failed");
+                    }
+                });
                 }
             });
         }

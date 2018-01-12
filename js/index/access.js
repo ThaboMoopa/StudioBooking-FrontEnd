@@ -3,9 +3,11 @@
  */
 $(document).ready(function()
 {
-    if(sessionStorage.getItem('username') != 'Admin')
+   //console.log( sessionStorage.getItem('username') != 'admin');
+    if(sessionStorage.getItem('username') != 'admin')
     {
         $('#users').hide();
+        $('#dropdownMenu7').hide();
+        $('#dropdownMenu5').hide();
     }
-
 });

@@ -9,7 +9,7 @@ if(isset($_GET['action'])) {
     $name = $_GET['name'];
     $password = $_GET['password'];
     $email = $_GET['email'];
-    $link = 'http://192.168.0.104:8443';
+    $link = 'http://10.0.0.159:8080';
 
     if($_GET['action'] == 'findAll') {
         findAll($link);
@@ -56,7 +56,7 @@ function findByEmail($link, $email)
 
     $err = curl_error($curl);
     curl_close($curl);
-    $results = json_decode($response);
+    echo $results = json_decode($response);
 }
 
 function login($email, $link, $password)
@@ -78,7 +78,7 @@ function login($email, $link, $password)
         ),
     ));
 //,"postman-token: 6b0d34a9-8fb9-13c4-28fe-e81d41bef709"
-    echo $response = curl_exec($curl);
+    $response = curl_exec($curl);
 
     $err = curl_error($curl);
     curl_close($curl);
